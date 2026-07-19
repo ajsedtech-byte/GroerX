@@ -8,18 +8,22 @@ dotenv.config();
 
 const app = express();
 
+/*
+  Public CORS fix:
+  This allows your Vercel frontend to call the backend from any device.
+*/
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://groer-x-one.vercel.app",
-      "https://groer-x-blx5dosxl-ajsedtech-bytes-projects.vercel.app"
-    ],
-    credentials: true,
+    origin: true,
+    credentials: false,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use(express.json());
+app.options("*", cors());
+
+app.use(express.json({ limit: "10mb" }));
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
@@ -29,7 +33,31 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "healthy",
+    message: "GroerX backend is live",
+  });
+});
+
 app.use("/api/class10", class10Routes);
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Server Error:", err.message);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Internal server error",
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 
