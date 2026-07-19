@@ -1,0 +1,1 @@
+import{Router}from'express';import jwt from'jsonwebtoken';const r=Router();r.post('/login',(req,res)=>{const user={id:'u1',name:req.body.name||'A.J',grade:'Class 10'};const token=jwt.sign(user,process.env.JWT_SECRET||'secret',{expiresIn:'7d'});res.json({token,user});});r.post('/register',(req,res)=>res.json({message:'registered',user:req.body}));export default r;

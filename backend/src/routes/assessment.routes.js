@@ -1,0 +1,1 @@
+import{Router}from'express';import{questions}from'../data/questions.js';import{scoreAssessment}from'../services/scoring.js';const r=Router();r.get('/questions',(req,res)=>res.json(questions));r.post('/submit',(req,res)=>res.json(scoreAssessment(req.body.answers||{})));r.get('/result/demo',(req,res)=>res.json(scoreAssessment({q1:'Strongly Agree',q2:2,q3:0})));export default r;

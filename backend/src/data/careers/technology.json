@@ -1,0 +1,857 @@
+[
+  {
+    "title": "Software Engineer",
+    "slug": "software-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Software Engineer is a high-value career path in Technology.",
+    "longDescription": "Software Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Software Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "AI Engineer",
+    "slug": "ai-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "AI Engineer is a high-value career path in Technology.",
+    "longDescription": "AI Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as AI Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "slug": "machine-learning-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Machine Learning Engineer is a high-value career path in Technology.",
+    "longDescription": "Machine Learning Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Machine Learning Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Data Scientist",
+    "slug": "data-scientist",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Data Scientist is a high-value career path in Technology.",
+    "longDescription": "Data Scientist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Data Scientist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Cyber Security Analyst",
+    "slug": "cyber-security-analyst",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Cyber Security Analyst is a high-value career path in Technology.",
+    "longDescription": "Cyber Security Analyst involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Cyber Security Analyst"
+    ],
+    "active": true
+  },
+  {
+    "title": "Cloud Engineer",
+    "slug": "cloud-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Cloud Engineer is a high-value career path in Technology.",
+    "longDescription": "Cloud Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Cloud Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "DevOps Engineer",
+    "slug": "devops-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "DevOps Engineer is a high-value career path in Technology.",
+    "longDescription": "DevOps Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as DevOps Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Full Stack Developer",
+    "slug": "full-stack-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Full Stack Developer is a high-value career path in Technology.",
+    "longDescription": "Full Stack Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Full Stack Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Backend Developer",
+    "slug": "backend-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Backend Developer is a high-value career path in Technology.",
+    "longDescription": "Backend Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Backend Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Frontend Developer",
+    "slug": "frontend-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Frontend Developer is a high-value career path in Technology.",
+    "longDescription": "Frontend Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Frontend Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Mobile App Developer",
+    "slug": "mobile-app-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Mobile App Developer is a high-value career path in Technology.",
+    "longDescription": "Mobile App Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Mobile App Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Game Developer",
+    "slug": "game-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Game Developer is a high-value career path in Technology.",
+    "longDescription": "Game Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Game Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Blockchain Developer",
+    "slug": "blockchain-developer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Blockchain Developer is a high-value career path in Technology.",
+    "longDescription": "Blockchain Developer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Blockchain Developer"
+    ],
+    "active": true
+  },
+  {
+    "title": "Robotics Engineer",
+    "slug": "robotics-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "Robotics Engineer is a high-value career path in Technology.",
+    "longDescription": "Robotics Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Robotics Engineer"
+    ],
+    "active": true
+  },
+  {
+    "title": "IoT Engineer",
+    "slug": "iot-engineer",
+    "category": "Technology",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb"
+    ],
+    "shortDescription": "IoT Engineer is a high-value career path in Technology.",
+    "longDescription": "IoT Engineer involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as IoT Engineer"
+    ],
+    "active": true
+  }
+]

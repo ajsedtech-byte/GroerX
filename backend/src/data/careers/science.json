@@ -1,0 +1,592 @@
+[
+  {
+    "title": "Data Analyst",
+    "slug": "data-analyst",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Data Analyst is a high-value career path in Science & Research.",
+    "longDescription": "Data Analyst involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Data Analyst"
+    ],
+    "active": true
+  },
+  {
+    "title": "Physicist",
+    "slug": "physicist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Physicist is a high-value career path in Science & Research.",
+    "longDescription": "Physicist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Physicist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Chemist",
+    "slug": "chemist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Chemist is a high-value career path in Science & Research.",
+    "longDescription": "Chemist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Chemist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Biologist",
+    "slug": "biologist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Biologist is a high-value career path in Science & Research.",
+    "longDescription": "Biologist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Biologist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Microbiologist",
+    "slug": "microbiologist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Microbiologist is a high-value career path in Science & Research.",
+    "longDescription": "Microbiologist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Microbiologist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Biochemist",
+    "slug": "biochemist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Biochemist is a high-value career path in Science & Research.",
+    "longDescription": "Biochemist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Biochemist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Environmental Scientist",
+    "slug": "environmental-scientist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Environmental Scientist is a high-value career path in Science & Research.",
+    "longDescription": "Environmental Scientist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Environmental Scientist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Astrophysicist",
+    "slug": "astrophysicist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Astrophysicist is a high-value career path in Science & Research.",
+    "longDescription": "Astrophysicist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Astrophysicist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Forensic Scientist",
+    "slug": "forensic-scientist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Forensic Scientist is a high-value career path in Science & Research.",
+    "longDescription": "Forensic Scientist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Forensic Scientist"
+    ],
+    "active": true
+  },
+  {
+    "title": "Research Scientist",
+    "slug": "research-scientist",
+    "category": "Science & Research",
+    "streamSlugs": [
+      "science-pcm",
+      "science-pcmb",
+      "science-pcb",
+      "science-pcmb"
+    ],
+    "shortDescription": "Research Scientist is a high-value career path in Science & Research.",
+    "longDescription": "Research Scientist involves specialized skills, structured education, practical training and continuous learning.",
+    "averageSalary": "₹3 LPA - ₹40+ LPA",
+    "futureDemand": 85,
+    "matchScore": 85,
+    "difficultyLevel": "Medium to High",
+    "studyYears": "3-5 years",
+    "workLifeBalance": "Moderate",
+    "requiredSkills": [
+      "Problem Solving",
+      "Communication",
+      "Discipline",
+      "Analytical Thinking"
+    ],
+    "subjectsNeeded": [
+      "English",
+      "Mathematics",
+      "Relevant Stream Subjects"
+    ],
+    "entranceExams": [
+      "CUET",
+      "Institute Entrance",
+      "Relevant Professional Exams"
+    ],
+    "degrees": [
+      "Bachelor Degree",
+      "Professional Certification",
+      "Specialization"
+    ],
+    "pros": [
+      "Good growth",
+      "Multiple opportunities",
+      "Strong long-term scope"
+    ],
+    "cons": [
+      "Competition",
+      "Needs consistency",
+      "Requires continuous learning"
+    ],
+    "roadmap": [
+      "Choose suitable Class 11 stream",
+      "Build strong basics",
+      "Prepare for entrance/professional exams",
+      "Complete degree or certification",
+      "Do internship/projects",
+      "Start career as Research Scientist"
+    ],
+    "active": true
+  }
+]

@@ -1,0 +1,1 @@
+import{Router}from'express';import{careers}from'../data/careers.js';const r=Router();r.get('/',(req,res)=>res.json(careers));export default r;

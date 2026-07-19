@@ -1,0 +1,129 @@
+[
+  {
+    "questionCode": "R001",
+    "mapping": {
+      "SA": {
+        "riasec": { "realistic": 5 },
+        "traits": {
+          "handsOn": 5,
+          "practicalThinking": 4,
+          "mechanicalInterest": 3
+        },
+        "stream": { "science": 2 }
+      },
+      "A": {
+        "riasec": { "realistic": 4 },
+        "traits": {
+          "handsOn": 4,
+          "practicalThinking": 3,
+          "mechanicalInterest": 2
+        },
+        "stream": { "science": 1 }
+      },
+      "N": {
+        "riasec": { "realistic": 3 },
+        "traits": { "handsOn": 2 },
+        "stream": {}
+      },
+      "D": {
+        "riasec": { "realistic": 2 },
+        "traits": {},
+        "stream": {}
+      },
+      "SD": {
+        "riasec": { "realistic": 1 },
+        "traits": {},
+        "stream": {}
+      }
+    },
+    "validation": {
+      "theory": "Holland RIASEC Theory",
+      "reason": "Measures Realistic interest through hands-on and practical work preference.",
+      "source": "O*NET Interest Profiler / Holland RIASEC"
+    }
+  },
+  {
+    "questionCode": "I001",
+    "mapping": {
+      "SA": {
+        "riasec": { "investigative": 5 },
+        "traits": {
+          "curiosity": 5,
+          "analyticalThinking": 4,
+          "problemSolving": 4
+        },
+        "stream": { "science": 3 }
+      },
+      "A": {
+        "riasec": { "investigative": 4 },
+        "traits": {
+          "curiosity": 4,
+          "analyticalThinking": 3,
+          "problemSolving": 3
+        },
+        "stream": { "science": 2 }
+      },
+      "N": {
+        "riasec": { "investigative": 3 },
+        "traits": { "curiosity": 2 },
+        "stream": {}
+      },
+      "D": {
+        "riasec": { "investigative": 2 },
+        "traits": {},
+        "stream": {}
+      },
+      "SD": {
+        "riasec": { "investigative": 1 },
+        "traits": {},
+        "stream": {}
+      }
+    },
+    "validation": {
+      "theory": "Holland RIASEC Theory",
+      "reason": "Measures Investigative interest through curiosity, analysis, and problem solving.",
+      "source": "O*NET Interest Profiler / Holland RIASEC"
+    }
+  },
+  {
+    "questionCode": "A001",
+    "mapping": {
+      "SA": {
+        "riasec": { "artistic": 5 },
+        "traits": {
+          "creativity": 5,
+          "visualThinking": 4
+        },
+        "stream": { "arts": 3 }
+      },
+      "A": {
+        "riasec": { "artistic": 4 },
+        "traits": {
+          "creativity": 4,
+          "visualThinking": 3
+        },
+        "stream": { "arts": 2 }
+      },
+      "N": {
+        "riasec": { "artistic": 3 },
+        "traits": { "creativity": 2 },
+        "stream": {}
+      },
+      "D": {
+        "riasec": { "artistic": 2 },
+        "traits": {},
+        "stream": {}
+      },
+      "SD": {
+        "riasec": { "artistic": 1 },
+        "traits": {},
+        "stream": {}
+      }
+    },
+    "validation": {
+      "theory": "Holland RIASEC Theory",
+      "reason": "Measures Artistic interest through creativity and original expression.",
+      "source": "O*NET Interest Profiler / Holland RIASEC"
+    }
+  }
+]

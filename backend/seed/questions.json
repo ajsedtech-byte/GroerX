@@ -1,0 +1,59 @@
+[
+  {
+    "questionCode": "R001",
+    "assessmentCode": "RIASEC_120",
+    "section": "RIASEC",
+    "dimension": "Realistic",
+    "subDimension": "Hands-on Work",
+    "questionText": "I enjoy repairing broken objects instead of throwing them away.",
+    "questionType": "likert",
+    "options": [
+      { "key": "SA", "text": "Strongly Agree" },
+      { "key": "A", "text": "Agree" },
+      { "key": "N", "text": "Neutral" },
+      { "key": "D", "text": "Disagree" },
+      { "key": "SD", "text": "Strongly Disagree" }
+    ],
+    "order": 1,
+    "isReverseScored": false,
+    "isActive": true
+  },
+  {
+    "questionCode": "I001",
+    "assessmentCode": "RIASEC_120",
+    "section": "RIASEC",
+    "dimension": "Investigative",
+    "subDimension": "Curiosity",
+    "questionText": "I enjoy finding out why things happen instead of simply accepting them.",
+    "questionType": "likert",
+    "options": [
+      { "key": "SA", "text": "Strongly Agree" },
+      { "key": "A", "text": "Agree" },
+      { "key": "N", "text": "Neutral" },
+      { "key": "D", "text": "Disagree" },
+      { "key": "SD", "text": "Strongly Disagree" }
+    ],
+    "order": 2,
+    "isReverseScored": false,
+    "isActive": true
+  },
+  {
+    "questionCode": "A001",
+    "assessmentCode": "RIASEC_120",
+    "section": "RIASEC",
+    "dimension": "Artistic",
+    "subDimension": "Creativity",
+    "questionText": "I enjoy creating something original instead of copying existing ideas.",
+    "questionType": "likert",
+    "options": [
+      { "key": "SA", "text": "Strongly Agree" },
+      { "key": "A", "text": "Agree" },
+      { "key": "N", "text": "Neutral" },
+      { "key": "D", "text": "Disagree" },
+      { "key": "SD", "text": "Strongly Disagree" }
+    ],
+    "order": 3,
+    "isReverseScored": false,
+    "isActive": true
+  }
+]
