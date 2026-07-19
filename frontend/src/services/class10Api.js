@@ -1,14 +1,29 @@
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+const API_ROOT = `${API_BASE_URL}/api`;
 const STUDENT_ID = "demo-student";
 
 async function apiRequest(endpoint, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const url = `${API_ROOT}${endpoint}`;
+
+  const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       ...(options.headers || {}),
     },
     ...options,
   });
+
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    const text = await response.text();
+    console.error("Expected JSON but received:", text.slice(0, 300));
+    throw new Error(
+      `Backend returned non-JSON response. Check API URL: ${url}`
+    );
+  }
 
   const data = await response.json();
 
@@ -93,4 +108,3 @@ export const class10Tests = [
     description: "Self-belief and readiness.",
   },
 ];
-
