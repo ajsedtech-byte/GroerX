@@ -1,14 +1,14 @@
 {
   "name": "groerx-career-frontend",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
     "axios": "^1.7.4",
     "lucide-react": "^1.24.0",
     "react": "^18.3.1",
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.2",
+    "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.5.2",
     "postcss": "^8.5.16",
     "tailwindcss": "^4.3.2",
