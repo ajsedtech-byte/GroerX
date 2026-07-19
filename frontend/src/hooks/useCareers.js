@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+const API = "https://groerx-backend.onrender.com/api";
 
 export default function useCareers() {
   const [careers, setCareers] = useState([]);
@@ -55,4 +55,6 @@ export default function useCareers() {
     error,
   };
 }
+
+
 

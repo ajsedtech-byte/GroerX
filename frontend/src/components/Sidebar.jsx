@@ -2,3 +2,5 @@ import{NavLink}from'react-router-dom';import{Home,Compass,GraduationCap,Bot,Book
 const items=[['/dashboard',Home,'Dashboard'],['/assessment',Compass,'Career Assessment'],['/dashboard',GraduationCap,'Stream Explorer'],['/careers',Compass,'Career Explorer'],['/mentor',Bot,'AI Career Counsellor'],['/dashboard',BookOpen,'Learning Paths'],['/dashboard',Brain,'Skill Builder'],['/dashboard',CalendarDays,'Study Planner'],['/dashboard',TrendingUp,'Progress Tracker'],['/dashboard',Users,'Parents Corner'],['/dashboard',Settings,'Settings']];
 export default function Sidebar({light=false}){return <aside className={'sidebar '+(light?'light':'')}><Logo/><nav>{items.map(([to,Icon,label])=><NavLink key={label} to={to} className={({isActive})=>isActive?'active':''}><Icon size={20}/><span>{label}</span></NavLink>)}</nav><div className='help-card'><div className='mascot'>🐘</div><h3>Need Help?</h3><p>Chat with our AI Mentor anytime!</p><button>Chat Now</button></div></aside>}
 
+
+

@@ -6,3 +6,5 @@ export const questions=[
 export const careers=[['UX Designer',92,'You enjoy understanding people, solving problems and expressing ideas creatively.'],['Psychologist',89,'Strong empathy and social understanding.'],['Graphic Designer',89,'Creative expression and visual thinking.'],['Social Worker',82,'Helping people and community orientation.'],['Research Analyst',80,'Investigative curiosity and analytical thinking.']];
 export const riasec=[{name:'Investigative',value:86},{name:'Artistic',value:78},{name:'Social',value:75},{name:'Enterprising',value:52},{name:'Conventional',value:31},{name:'Realistic',value:28}];
 
+
+

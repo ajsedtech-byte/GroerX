@@ -1,2 +1,4 @@
 import Sidebar from'../components/Sidebar';import Topbar from'../components/Topbar';export default function Mentor(){return <div className='app'><Sidebar/><main className='main'><Topbar title='AI Career Counsellor' sub='Dashboard › AI Mentor'/><section className='glass chat'><h2>GroerX Pathfinder Engine</h2><div className='msg user-msg'>I am confused between Science and Design.</div><div className='msg bot-msg'>Your profile shows strong Investigative + Artistic traits. Product Design, UX Research, Architecture and AI Design could be strong career directions.</div><input placeholder='Ask anything about your career...' /></section></main></div>}
 
+
+

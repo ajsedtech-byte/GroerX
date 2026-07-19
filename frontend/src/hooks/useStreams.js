@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://groerx-backend.onrender.com/api";
 
 export default function useStreams() {
   const [streams, setStreams] = useState([]);
@@ -52,4 +52,6 @@ export default function useStreams() {
     error,
   };
 }
+
+
 
