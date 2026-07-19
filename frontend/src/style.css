@@ -1,0 +1,363 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #07111f;
+  color: white;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #07111f;
+  color: white;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.card {
+  background: #0f1d33;
+  border: 1px solid #22385d;
+  border-radius: 24px;
+  padding: 28px;
+  width: 100%;
+}
+
+.small {
+  max-width: 460px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.5fr 0.9fr;
+  gap: 24px;
+  max-width: 1100px;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 1px solid #29446f;
+  background: #09172a;
+  color: white;
+}
+
+
+.options {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.options button {
+  text-align: left;
+  background: #142744;
+  border: 1px solid #2a4775;
+}
+
+.options button:hover {
+  background: #1d9bf0;
+}
+
+.muted {
+  color: #8ea6c8;
+}
+
+.barBox {
+  margin: 14px 0;
+}
+
+.barLabel {
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  color: #cfe3ff;
+}
+
+.bar {
+  height: 10px;
+  background: #07111f;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.bar div {
+  height: 100%;
+  background: #1d9bf0;
+  border-radius: 30px;
+}
+
+@media (max-width: 850px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================================================
+   FORCE GROERX BLUE THEME
+   Paste this at the VERY BOTTOM of frontend/src/style.css
+========================================================= */
+
+:root {
+  --gx-blue: #005bff;
+  --gx-sky: #00a3ff;
+  --gx-navy: #071b5f;
+  --gx-soft: #eff6ff;
+  --gx-soft-2: #f6faff;
+  --gx-border: #bfd7ff;
+  --gx-border-soft: #d6e6ff;
+}
+
+/* MAIN TEXT PURPLE TO BLUE */
+.gx-nav-btn.active,
+.gx-profile-card p,
+.gx-help-card h3,
+.c10-breadcrumb span,
+.c10-stat-value,
+.c10-percent,
+.c10-section-title,
+.c10-action-card b,
+.c10-latest-card p,
+.a10-eyebrow,
+.a10-status-pill,
+.a10-current-round,
+.a10-question-label,
+.lp-breadcrumb span,
+.lp-header p span,
+.lp-hero-card p,
+.lp-section-head p,
+.lp-step-card p {
+  color: var(--gx-blue) !important;
+}
+
+/* MAIN HEADINGS NAVY */
+.c10-page h1,
+.c10-page h2,
+.c10-page h3,
+.a10-page h1,
+.a10-page h2,
+.a10-page h3,
+.lp-page h1,
+.lp-page h2,
+.lp-page h3 {
+  color: var(--gx-navy) !important;
+}
+
+/* BUTTONS + ACTIVE ITEMS BLUE */
+.gx-help-card button,
+.c10-primary-btn,
+.c10-action-btn,
+.c10-test-btn,
+.a10-back-btn,
+.a10-next-btn,
+.a10-submit-btn,
+.lp-header-btn,
+.lp-step-icon,
+.lp-modal-icon,
+button.primary,
+button[class*="primary"],
+button[class*="next"],
+button[class*="submit"] {
+  background: linear-gradient(135deg, #005bff, #00a3ff) !important;
+  color: #ffffff !important;
+  border-color: #005bff !important;
+  box-shadow: 0 14px 28px rgba(0, 91, 255, 0.22) !important;
+}
+
+/* SIDEBAR ACTIVE BLUE */
+.gx-nav-btn.active {
+  background: linear-gradient(135deg, #eff6ff, #f6faff) !important;
+  border: 1px solid #bfd7ff !important;
+  box-shadow: 0 12px 24px rgba(0, 91, 255, 0.12) !important;
+}
+
+.gx-nav-btn:hover {
+  background: #eff6ff !important;
+}
+
+/* PROFILE CARD BLUE */
+.gx-profile-card {
+  border-color: #bfd7ff !important;
+  background: linear-gradient(135deg, #ffffff, #f6faff) !important;
+}
+
+/* DASHBOARD TOP CARDS PROGRESS LINES */
+.c10-stat-card,
+.c10-progress-card,
+.c10-quick-card,
+.c10-latest-card,
+.c10-test-row,
+.c10-card,
+.c10-action-card {
+  border-color: #d6e6ff !important;
+  box-shadow: 0 14px 28px rgba(0, 43, 120, 0.07) !important;
+}
+
+.c10-stat-line,
+.c10-progress-line,
+.c10-fill,
+.c10-bar-fill,
+.c10-progress-fill {
+  background: linear-gradient(90deg, #005bff, #00a3ff) !important;
+}
+
+/* DASHBOARD ICON CIRCLES */
+.c10-stat-icon,
+.c10-test-icon,
+.c10-section-icon,
+.c10-action-icon,
+.c10-latest-icon {
+  background: #eff6ff !important;
+}
+
+/* QUICK ACTIONS ARROWS */
+.c10-action-card span:last-child,
+.c10-action-card b,
+.c10-action-arrow {
+  color: #005bff !important;
+}
+
+/* ASSESSMENT PAGE BLUE */
+.a10-page {
+  background:
+    radial-gradient(circle at 88% 5%, rgba(0, 163, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 18% 95%, rgba(0, 91, 255, 0.08), transparent 26%),
+    #fbfdff !important;
+}
+
+.a10-hero-card,
+.a10-round-card,
+.a10-question-card,
+.a10-option {
+  border-color: #d6e6ff !important;
+}
+
+.a10-round-btn,
+.a10-question-dot,
+.a10-question-btn {
+  border-color: #bfd7ff !important;
+  color: #071b5f !important;
+  background: #ffffff !important;
+}
+
+.a10-round-btn.active,
+.a10-question-dot.active,
+.a10-question-btn.active {
+  background: linear-gradient(135deg, #005bff, #00a3ff) !important;
+  color: #ffffff !important;
+  border-color: #005bff !important;
+}
+
+.a10-option:hover {
+  border-color: #00a3ff !important;
+  background: #eff6ff !important;
+}
+
+.a10-option.selected {
+  border-color: #005bff !important;
+  background: linear-gradient(135deg, #eff6ff, #ffffff) !important;
+}
+
+.a10-progress-fill,
+.a10-progress-bar-fill {
+  background: linear-gradient(90deg, #005bff, #00a3ff) !important;
+}
+
+/* ROUND / PERCENT CIRCLE BLUE */
+.a10-progress-ring,
+.a10-progress-circle,
+.a10-percent-ring,
+.lp-hero-visual,
+.lp-progress-ring {
+  background: conic-gradient(
+    from 90deg,
+    #005bff,
+    #00a3ff,
+    #3b82f6,
+    #005bff
+  ) !important;
+}
+
+/* LEARNING PATH BLUE */
+.lp-page {
+  background:
+    radial-gradient(circle at 88% 5%, rgba(0, 163, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 18% 95%, rgba(0, 91, 255, 0.08), transparent 26%),
+    #fbfdff !important;
+}
+
+.lp-bg-glow {
+  background: radial-gradient(circle, rgba(0, 91, 255, 0.18), transparent 68%) !important;
+}
+
+.lp-hero-card::before,
+.lp-mission-card::before,
+.a10-hero-card::before {
+  background: linear-gradient(180deg, #005bff, #00a3ff) !important;
+}
+
+.lp-step-card,
+.lp-hero-card,
+.lp-module-card,
+.lp-subject-card,
+.lp-modal {
+  border-color: #d6e6ff !important;
+}
+
+.lp-step-card:hover {
+  border-color: #00a3ff !important;
+  box-shadow: 0 18px 30px rgba(0, 91, 255, 0.14) !important;
+}
+
+.lp-step-top strong,
+.lp-step-bg-number {
+  color: rgba(0, 91, 255, 0.16) !important;
+}
+
+.lp-step-card button,
+.lp-modal-actions button {
+  color: #005bff !important;
+  border-color: #bfd7ff !important;
+}
+
+.lp-step-card button:hover,
+.lp-modal-actions button:hover {
+  background: #eff6ff !important;
+}
+
+/* ANY OLD PURPLE CLASS CLEANUP */
+[class*="purple"],
+[class*="violet"] {
+  color: #005bff !important;
+  border-color: #bfd7ff !important;
+}
+
+/* KEEP LOGOUT RED */
+.gx-logout-btn {
+  color: #dc2626 !important;
+  border-color: #fca5a5 !important;
+  background: #ffffff !important;
+}
+
+/* BLUE SCROLLBAR */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #005bff, #00a3ff) !important;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eff6ff !important;
+}
