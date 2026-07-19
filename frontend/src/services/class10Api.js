@@ -1,37 +1,57 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = "https://groerx-backend.onrender.com/api";
 
-const API_ROOT = `${API_BASE_URL}/api`;
 const STUDENT_ID = "demo-student";
 
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function apiRequest(endpoint, options = {}) {
-  const url = `${API_ROOT}${endpoint}`;
+  const url = `${API_BASE_URL}${endpoint}`;
 
-  const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
+  let lastError = null;
 
-  const contentType = response.headers.get("content-type") || "";
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      const response = await fetch(url, {
+        method: options.method || "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
+        ...options,
+      });
 
-  if (!contentType.includes("application/json")) {
-    const text = await response.text();
-    console.error("Expected JSON but received:", text.slice(0, 300));
-    throw new Error(
-      `Backend returned non-JSON response. Check API URL: ${url}`
-    );
+      const contentType = response.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const text = await response.text();
+
+        console.error("Wrong API response from:", url);
+        console.error("Received:", text.slice(0, 500));
+
+        throw new Error(`Backend returned non-JSON response from: ${url}`);
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "API request failed");
+      }
+
+      return data;
+    } catch (error) {
+      lastError = error;
+      console.error(`API attempt ${attempt} failed:`, error.message);
+
+      if (attempt < 4) {
+        await wait(3000);
+      }
+    }
   }
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "API request failed");
-  }
-
-  return data;
+  throw lastError || new Error("API request failed");
 }
 
 export function getClass10Dashboard() {
