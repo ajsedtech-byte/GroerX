@@ -19,7 +19,7 @@ const TEST_CONFIG = [
     key: "aptitude",
     name: "Aptitude Test",
     icon: "🧠",
-    color: "linear-gradient(135deg, #3b82f6, #ec4899)",
+    color: "linear-gradient(135deg, #3b82f6, #06b6d4)",
   },
   {
     key: "personality",
@@ -37,7 +37,7 @@ const TEST_CONFIG = [
     key: "situational-iq",
     name: "Situational IQ Test",
     icon: "🎯",
-    color: "linear-gradient(135deg, #ec4899, #f43f5e)",
+    color: "linear-gradient(135deg, #0ea5e9, #0284c7)",
   },
   {
     key: "values",
@@ -97,6 +97,18 @@ function getAssessmentTests() {
         : "Not Started",
     };
   });
+}
+
+function isValidRecommendation(recommendation) {
+  if (!recommendation) return false;
+
+  const stream =
+    recommendation?.recommendedStream ||
+    recommendation?.stream ||
+    recommendation?.topStream ||
+    recommendation?.recommendation?.recommendedStream;
+
+  return Boolean(stream);
 }
 
 export default function Class10Dashboard({ setActivePage }) {
@@ -159,30 +171,59 @@ export default function Class10Dashboard({ setActivePage }) {
     return Math.min(100, Math.round((totalAttempted / totalQuestions) * 100));
   }
 
+  function areAllTestsCompleted() {
+    return getCompletedCount() === TEST_CONFIG.length;
+  }
+
   function getStreamName() {
+    if (!areAllTestsCompleted()) {
+      return "Locked";
+    }
+
+    if (!isValidRecommendation(recommendation)) {
+      return "Generate First";
+    }
+
     const raw =
       recommendation?.recommendedStream ||
       recommendation?.stream ||
       recommendation?.topStream ||
       recommendation?.recommendation?.recommendedStream;
 
-    if (!raw) return "Commerce";
     if (typeof raw === "string") return raw;
 
-    return raw.name || raw.streamName || raw.title || "Commerce";
+    return raw?.name || raw?.streamName || raw?.title || "Recommended";
   }
 
   function getMatchScore() {
+    if (!areAllTestsCompleted()) {
+      return null;
+    }
+
     return (
       recommendation?.matchScore ||
       recommendation?.match ||
       recommendation?.recommendedStream?.matchScore ||
       recommendation?.recommendation?.matchScore ||
-      96
+      null
     );
   }
 
+  function openLockedModule(pageName) {
+    if (!areAllTestsCompleted()) {
+      alert("Complete all 7 assessments first to unlock this module.");
+      return;
+    }
+
+    setActivePage(pageName);
+  }
+
   async function handleGenerateRecommendation() {
+    if (!areAllTestsCompleted()) {
+      alert("Complete all 7 assessments first before generating recommendation.");
+      return;
+    }
+
     try {
       setGenerating(true);
       await generateClass10Recommendation();
@@ -194,6 +235,7 @@ export default function Class10Dashboard({ setActivePage }) {
 
   const completedCount = getCompletedCount();
   const progressPercent = getProgressPercent();
+  const allTestsCompleted = areAllTestsCompleted();
   const streamName = getStreamName();
   const matchScore = getMatchScore();
 
@@ -225,8 +267,8 @@ export default function Class10Dashboard({ setActivePage }) {
         <h1>Class 10 Career Dashboard</h1>
 
         <h3>
-          Complete assessments, generate stream recommendation, explore careers,
-          and create the final career report.
+          Complete assessments first. Stream recommendation, career explorer,
+          and final report unlock only after all 7 tests are completed.
         </h3>
       </header>
 
@@ -245,12 +287,21 @@ export default function Class10Dashboard({ setActivePage }) {
           progress
         />
 
-        <SummaryCard icon="🎓" label="Recommended Stream" value={streamName} />
+        <SummaryCard
+          icon={allTestsCompleted ? "🎓" : "🔒"}
+          label="Recommended Stream"
+          value={streamName}
+          locked={!allTestsCompleted}
+        />
 
         <SummaryCard
-          icon="🚀"
+          icon={allTestsCompleted ? "🚀" : "🔐"}
           label="Next Action"
-          value="Generate final stream recommendation"
+          value={
+            allTestsCompleted
+              ? "Generate final stream recommendation"
+              : "Complete all assessments"
+          }
           small
         />
       </section>
@@ -285,7 +336,7 @@ export default function Class10Dashboard({ setActivePage }) {
                     onClick={() => setActivePage(`assessment:${test.key}`)}
                     className="cx-retake-btn"
                   >
-                    {test.attempted > 0 ? "Retake" : "Start"}
+                    {test.attempted > 0 ? "Continue" : "Start"}
                   </button>
                 </div>
               );
@@ -311,63 +362,90 @@ export default function Class10Dashboard({ setActivePage }) {
 
             <button
               type="button"
-              className="cx-action-btn"
+              className={`cx-action-btn ${!allTestsCompleted ? "locked" : ""}`}
               onClick={handleGenerateRecommendation}
             >
               <span>
-                ✨ {generating ? "Generating..." : "Generate Recommendation"}
+                {!allTestsCompleted
+                  ? "🔒 Generate Recommendation"
+                  : `✨ ${generating ? "Generating..." : "Generate Recommendation"}`}
               </span>
               <b>›</b>
             </button>
 
             <button
               type="button"
-              className="cx-action-btn"
-              onClick={() => setActivePage("stream-explorer")}
+              className={`cx-action-btn ${!allTestsCompleted ? "locked" : ""}`}
+              onClick={() => openLockedModule("stream-explorer")}
             >
-              <span>🧭 Open Stream Explorer</span>
+              <span>
+                {allTestsCompleted
+                  ? "🧭 Open Stream Explorer"
+                  : "🔒 Stream Explorer Locked"}
+              </span>
               <b>›</b>
             </button>
 
             <button
               type="button"
-              className="cx-action-btn"
-              onClick={() => setActivePage("career-explorer")}
+              className={`cx-action-btn ${!allTestsCompleted ? "locked" : ""}`}
+              onClick={() => openLockedModule("career-explorer")}
             >
-              <span>💼 Open Career Explorer</span>
+              <span>
+                {allTestsCompleted
+                  ? "💼 Open Career Explorer"
+                  : "🔒 Career Explorer Locked"}
+              </span>
               <b>›</b>
             </button>
 
             <button
               type="button"
-              className="cx-action-btn"
-              onClick={() => setActivePage("final-report")}
+              className={`cx-action-btn ${!allTestsCompleted ? "locked" : ""}`}
+              onClick={() => openLockedModule("final-report")}
             >
-              <span>📄 View Final Report</span>
+              <span>
+                {allTestsCompleted ? "📄 View Final Report" : "🔒 Final Report Locked"}
+              </span>
               <b>›</b>
             </button>
           </div>
 
-          <div className="cx-recommend-card">
-            <div className="cx-trophy">🏆</div>
+          {!allTestsCompleted ? (
+            <div className="cx-locked-card">
+              <div className="cx-trophy">🔒</div>
 
-            <div>
-              <p>Latest Recommendation</p>
-              <h3>{streamName}</h3>
-              <h4>
-                Match: <span>{matchScore}%</span>
-              </h4>
+              <div>
+                <p>Result Modules Locked</p>
+                <h3>Complete all 7 tests</h3>
+                <h4>
+                  Stream Explorer, Career Explorer, and Final Report will unlock
+                  after assessment completion.
+                </h4>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="cx-recommend-card">
+              <div className="cx-trophy">🏆</div>
+
+              <div>
+                <p>Latest Recommendation</p>
+                <h3>{streamName}</h3>
+                <h4>
+                  Match: <span>{matchScore ? `${matchScore}%` : "Generate first"}</span>
+                </h4>
+              </div>
+            </div>
+          )}
         </aside>
       </section>
     </section>
   );
 }
 
-function SummaryCard({ icon, label, value, small, progress }) {
+function SummaryCard({ icon, label, value, small, progress, locked }) {
   return (
-    <div className="cx-summary-card">
+    <div className={`cx-summary-card ${locked ? "locked" : ""}`}>
       <div className="cx-summary-content">
         <div className="cx-summary-icon">{icon}</div>
 
@@ -462,13 +540,17 @@ const dashboardCss = `
 
 .cx-summary-card {
   border-radius: 19px;
-  border: 1px solid #e7e2f4;
+  border: 1px solid #d6e6ff;
   background: #ffffff;
   box-shadow: 0 14px 30px rgba(15, 23, 42, 0.055);
   padding: 16px 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.cx-summary-card.locked {
+  background: linear-gradient(135deg, #ffffff, #f8fbff);
 }
 
 .cx-summary-content {
@@ -530,7 +612,7 @@ const dashboardCss = `
 
 .cx-card {
   border-radius: 22px;
-  border: 1px solid #e7e2f4;
+  border: 1px solid #d6e6ff;
   background: #ffffff;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.065);
 }
@@ -576,7 +658,7 @@ const dashboardCss = `
 
 .cx-test-list {
   height: calc(100% - 46px);
-  border: 1px solid #e7e2f4;
+  border: 1px solid #d6e6ff;
   border-radius: 17px;
   overflow: hidden;
   display: grid;
@@ -669,6 +751,12 @@ const dashboardCss = `
   cursor: pointer;
 }
 
+.cx-action-btn.locked {
+  opacity: 0.8;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  color: #64748b;
+}
+
 .cx-action-btn span {
   font-size: 14px;
   font-weight: 900;
@@ -684,10 +772,9 @@ const dashboardCss = `
   background: #F6FAFF;
 }
 
-.cx-recommend-card {
+.cx-recommend-card,
+.cx-locked-card {
   margin-top: auto;
-  border: 1px solid #BFD7FF;
-  background: linear-gradient(135deg, #f8f3ff, #ffffff);
   border-radius: 18px;
   padding: 20px;
   display: flex;
@@ -696,11 +783,21 @@ const dashboardCss = `
   min-height: 106px;
 }
 
+.cx-recommend-card {
+  border: 1px solid #BFD7FF;
+  background: linear-gradient(135deg, #f8fbff, #ffffff);
+}
+
+.cx-locked-card {
+  border: 1px solid #fed7aa;
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
 .cx-trophy {
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #E6F0FF, #ddd6fe);
+  background: linear-gradient(135deg, #E6F0FF, #dbeafe);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -708,25 +805,29 @@ const dashboardCss = `
   flex-shrink: 0;
 }
 
-.cx-recommend-card p {
+.cx-recommend-card p,
+.cx-locked-card p {
   margin: 0 0 5px;
   color: #005BFF;
   font-size: 13px;
   font-weight: 900;
 }
 
-.cx-recommend-card h3 {
+.cx-recommend-card h3,
+.cx-locked-card h3 {
   margin: 0;
   color: #111827;
   font-size: 22px;
   font-weight: 950;
 }
 
-.cx-recommend-card h4 {
+.cx-recommend-card h4,
+.cx-locked-card h4 {
   margin: 5px 0 0;
   color: #64748b;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 750;
+  line-height: 1.35;
 }
 
 .cx-recommend-card h4 span {
@@ -743,7 +844,7 @@ const dashboardCss = `
 
 .cx-loader-card {
   background: white;
-  border: 1px solid #e7e2f4;
+  border: 1px solid #d6e6ff;
   border-radius: 22px;
   padding: 34px;
   text-align: center;
@@ -755,156 +856,62 @@ const dashboardCss = `
   margin-bottom: 14px;
 }
 
-@media (max-height: 760px) {
+@media (max-width: 1100px) {
   .cx-page {
-    padding: 18px 24px 16px;
-    grid-template-rows: auto 78px 1fr;
-    gap: 12px;
-  }
-
-  .cx-header p {
-    margin-bottom: 6px;
-    font-size: 12px;
-  }
-
-  .cx-header h1 {
-    font-size: 31px;
-  }
-
-  .cx-header h3 {
-    margin-top: 6px;
-    font-size: 12.5px;
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
   }
 
   .cx-summary-grid {
-    gap: 12px;
-  }
-
-  .cx-summary-card {
-    border-radius: 16px;
-    padding: 11px 12px;
-  }
-
-  .cx-summary-icon {
-    width: 34px;
-    height: 34px;
-    font-size: 16px;
-  }
-
-  .cx-summary-card p {
-    font-size: 11px;
-  }
-
-  .cx-summary-card h2 {
-    font-size: 20px;
-  }
-
-  .cx-summary-card h2.small {
-    font-size: 13px;
-  }
-
-  .cx-card-progress {
-    margin-top: 8px;
-    height: 4px;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .cx-main-grid {
-    gap: 12px;
-  }
-
-  .cx-assessment-card,
-  .cx-action-card {
-    padding: 12px;
-  }
-
-  .cx-section-title {
-    margin-bottom: 8px;
-  }
-
-  .cx-title-icon {
-    width: 24px;
-    height: 24px;
-    font-size: 15px;
-  }
-
-  .cx-section-title h2 {
-    font-size: 19px;
+    grid-template-columns: 1fr;
   }
 
   .cx-test-list {
-    height: calc(100% - 34px);
+    height: auto;
+    display: block;
   }
 
   .cx-test-row {
-    grid-template-columns: 34px 1fr 52px 78px;
-    gap: 9px;
-    padding: 0 12px;
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 700px) {
+  .cx-page {
+    padding: 18px;
+    grid-template-rows: auto;
   }
 
-  .cx-test-icon {
-    width: 25px;
-    height: 25px;
-    font-size: 12px;
+  .cx-header h1 {
+    font-size: 30px;
   }
 
-  .cx-test-info h4 {
-    font-size: 11.5px;
+  .cx-summary-grid {
+    grid-template-columns: 1fr;
   }
 
-  .cx-test-info p {
-    font-size: 10px;
+  .cx-test-row {
+    grid-template-columns: 36px 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .cx-score,
+  .cx-retake-btn {
+    grid-column: 2;
   }
 
   .cx-score {
-    font-size: 11.5px;
+    text-align: left;
   }
 
   .cx-retake-btn {
-    height: 25px;
-    font-size: 10.5px;
-  }
-
-  .cx-action-list {
-    gap: 7px;
-  }
-
-  .cx-action-btn {
-    height: 33px;
-    border-radius: 11px;
-  }
-
-  .cx-action-btn span {
-    font-size: 11.5px;
-  }
-
-  .cx-action-btn b {
-    font-size: 20px;
-  }
-
-  .cx-recommend-card {
-    min-height: 72px;
-    padding: 12px;
-  }
-
-  .cx-trophy {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-
-  .cx-recommend-card p {
-    font-size: 11px;
-  }
-
-  .cx-recommend-card h3 {
-    font-size: 18px;
-  }
-
-  .cx-recommend-card h4 {
-    font-size: 12px;
+    width: 120px;
   }
 }
 `;
-
-
-
