@@ -1,52 +1,148 @@
-const API_BASE_URL = "https://groerx-backend.onrender.com/api";
+const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+const PRODUCTION_API_BASE_URL = "https://groerx-backend.onrender.com/api";
 
 const STUDENT_ID = "demo-student";
+
+const VALID_TEST_TYPES = [
+  "riasec",
+  "aptitude",
+  "personality",
+  "academic-style",
+  "situational-iq",
+  "values",
+  "confidence",
+];
+
+function isLocalFrontend() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  );
+}
+
+function getPrimaryApiBaseUrl() {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+
+  if (isLocalFrontend()) {
+    return LOCAL_API_BASE_URL;
+  }
+
+  return PRODUCTION_API_BASE_URL;
+}
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function getSafeRound(round) {
+  const parsedRound = Number(round);
+
+  if (!Number.isInteger(parsedRound)) {
+    return 1;
+  }
+
+  if (parsedRound < 1) {
+    return 1;
+  }
+
+  if (parsedRound > 5) {
+    return 5;
+  }
+
+  return parsedRound;
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const primaryBaseUrl = getPrimaryApiBaseUrl();
+
+  const fallbackBaseUrl =
+    primaryBaseUrl === LOCAL_API_BASE_URL
+      ? PRODUCTION_API_BASE_URL
+      : LOCAL_API_BASE_URL;
+
+  const urlsToTry = [
+    `${primaryBaseUrl}${endpoint}`,
+    `${fallbackBaseUrl}${endpoint}`,
+  ];
 
   let lastError = null;
 
-  for (let attempt = 1; attempt <= 4; attempt++) {
-    try {
-      const response = await fetch(url, {
-        method: options.method || "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
+  for (const url of urlsToTry) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const headers = {
           ...(options.headers || {}),
-        },
-        ...options,
-      });
+        };
 
-      const contentType = response.headers.get("content-type") || "";
+        if (options.body) {
+          headers["Content-Type"] = "application/json";
+        }
 
-      if (!contentType.includes("application/json")) {
-        const text = await response.text();
+        const response = await fetchWithTimeout(
+          url,
+          {
+            method: options.method || "GET",
+            mode: "cors",
+            headers,
+            ...options,
+          },
+          8000
+        );
 
-        console.error("Wrong API response from:", url);
-        console.error("Received:", text.slice(0, 500));
+        const contentType = response.headers.get("content-type") || "";
 
-        throw new Error(`Backend returned non-JSON response from: ${url}`);
-      }
+        if (!contentType.includes("application/json")) {
+          const text = await response.text();
 
-      const data = await response.json();
+          console.error("Wrong API response from:", url);
+          console.error("Received:", text.slice(0, 500));
 
-      if (!response.ok) {
-        throw new Error(data.message || "API request failed");
-      }
+          throw new Error(`Backend returned non-JSON response from: ${url}`);
+        }
 
-      return data;
-    } catch (error) {
-      lastError = error;
-      console.error(`API attempt ${attempt} failed:`, error.message);
+        const data = await response.json();
 
-      if (attempt < 4) {
-        await wait(3000);
+        if (!response.ok) {
+          throw new Error(data.message || "API request failed");
+        }
+
+        return data;
+      } catch (error) {
+        lastError = error;
+
+        console.error(
+          `API failed: ${url} | attempt ${attempt}`,
+          error.message
+        );
+
+        if (attempt < 2) {
+          await wait(700);
+        }
       }
     }
   }
@@ -59,15 +155,28 @@ export function getClass10Dashboard() {
 }
 
 export function getClass10Questions(testType, round = 1) {
-  return apiRequest(`/class10/questions/${testType}?round=${round}`);
+  if (!VALID_TEST_TYPES.includes(testType)) {
+    throw new Error(`Invalid Class 10 test type: ${testType}`);
+  }
+
+  const safeRound = getSafeRound(round);
+
+  return apiRequest(`/class10/questions/${testType}?round=${safeRound}`);
 }
 
-export function submitClass10Assessment({ testType, answers }) {
+export function submitClass10Assessment({ testType, round = 1, answers = [] }) {
+  if (!VALID_TEST_TYPES.includes(testType)) {
+    throw new Error(`Invalid Class 10 test type: ${testType}`);
+  }
+
+  const safeRound = getSafeRound(round);
+
   return apiRequest("/class10/submit", {
     method: "POST",
     body: JSON.stringify({
       studentId: STUDENT_ID,
       testType,
+      round: safeRound,
       answers,
     }),
   });
@@ -128,4 +237,3 @@ export const class10Tests = [
     description: "Self-belief and readiness.",
   },
 ];
-

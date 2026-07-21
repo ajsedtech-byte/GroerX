@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import {
-  getClass10Progress,
   getClass10Recommendation,
   generateClass10Recommendation,
 } from "../services/class10Api";
 
-const TEST_TOTAL_QUESTIONS = 100;
+const TEST_TOTAL_QUESTIONS = 20;
 
 const TEST_CONFIG = [
   {
@@ -62,12 +61,21 @@ function safeParseArray(value) {
   }
 }
 
-function getClass10TestProgress(testKey) {
+function getRoundOneAttempts(testKey) {
   const attempted = safeParseArray(
     localStorage.getItem(`class10_attempted_${testKey}`)
   );
 
-  const attemptedCount = Array.from(new Set(attempted)).length;
+  const roundOneAttempts = attempted.filter((item) =>
+    String(item).startsWith("round-1-q-")
+  );
+
+  return Array.from(new Set(roundOneAttempts));
+}
+
+function getClass10TestProgress(testKey) {
+  const roundOneAttempts = getRoundOneAttempts(testKey);
+  const attemptedCount = Math.min(TEST_TOTAL_QUESTIONS, roundOneAttempts.length);
 
   return {
     attempted: attemptedCount,
@@ -91,9 +99,9 @@ function getAssessmentTests() {
       percentage: progress.percentage,
       completed: progress.completed,
       status: progress.completed
-        ? "Completed"
+        ? "Round 1 Completed"
         : progress.attempted > 0
-        ? "In Progress"
+        ? "Round 1 In Progress"
         : "Not Started",
     };
   });
@@ -112,7 +120,6 @@ function isValidRecommendation(recommendation) {
 }
 
 export default function Class10Dashboard({ setActivePage }) {
-  const [progress, setProgress] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -124,12 +131,10 @@ export default function Class10Dashboard({ setActivePage }) {
     try {
       setLoading(true);
 
-      const progressResponse = await getClass10Progress().catch(() => null);
       const recommendationResponse = await getClass10Recommendation().catch(
         () => null
       );
 
-      setProgress(progressResponse?.data || progressResponse || null);
       setRecommendation(
         recommendationResponse?.data || recommendationResponse || null
       );
@@ -160,7 +165,7 @@ export default function Class10Dashboard({ setActivePage }) {
 
   function getProgressPercent() {
     const totalAttempted = tests.reduce(
-      (sum, test) => sum + Number(test.attempted || 0),
+(sum, test) => sum + Number(test.attempted || 0),
       0
     );
 
@@ -171,12 +176,12 @@ export default function Class10Dashboard({ setActivePage }) {
     return Math.min(100, Math.round((totalAttempted / totalQuestions) * 100));
   }
 
-  function areAllTestsCompleted() {
+  function areAllRoundOneTestsCompleted() {
     return getCompletedCount() === TEST_CONFIG.length;
   }
 
   function getStreamName() {
-    if (!areAllTestsCompleted()) {
+    if (!areAllRoundOneTestsCompleted()) {
       return "Locked";
     }
 
@@ -196,7 +201,7 @@ export default function Class10Dashboard({ setActivePage }) {
   }
 
   function getMatchScore() {
-    if (!areAllTestsCompleted()) {
+    if (!areAllRoundOneTestsCompleted()) {
       return null;
     }
 
@@ -210,8 +215,8 @@ export default function Class10Dashboard({ setActivePage }) {
   }
 
   function openLockedModule(pageName) {
-    if (!areAllTestsCompleted()) {
-      alert("Complete all 7 assessments first to unlock this module.");
+    if (!areAllRoundOneTestsCompleted()) {
+      alert("Complete Round 1 of all 7 assessments first to unlock this module.");
       return;
     }
 
@@ -219,8 +224,10 @@ export default function Class10Dashboard({ setActivePage }) {
   }
 
   async function handleGenerateRecommendation() {
-    if (!areAllTestsCompleted()) {
-      alert("Complete all 7 assessments first before generating recommendation.");
+    if (!areAllRoundOneTestsCompleted()) {
+      alert(
+        "Complete Round 1 of all 7 assessments first before generating recommendation."
+      );
       return;
     }
 
@@ -235,7 +242,7 @@ export default function Class10Dashboard({ setActivePage }) {
 
   const completedCount = getCompletedCount();
   const progressPercent = getProgressPercent();
-  const allTestsCompleted = areAllTestsCompleted();
+  const allTestsCompleted = areAllRoundOneTestsCompleted();
   const streamName = getStreamName();
   const matchScore = getMatchScore();
 
@@ -267,22 +274,22 @@ export default function Class10Dashboard({ setActivePage }) {
         <h1>Class 10 Career Dashboard</h1>
 
         <h3>
-          Complete assessments first. Stream recommendation, career explorer,
-          and final report unlock only after all 7 tests are completed.
+          Complete Round 1 of all 7 assessments. Stream Explorer, Career
+          Explorer, and Final Report unlock after Round 1 completion.
         </h3>
       </header>
 
       <section className="cx-summary-grid">
         <SummaryCard
           icon="📈"
-          label="Career Progress"
+          label="Round 1 Progress"
           value={`${progressPercent}%`}
           progress
         />
 
         <SummaryCard
           icon="📋"
-          label="Completed Tests"
+          label="Round 1 Tests Completed"
           value={`${completedCount}/7`}
           progress
         />
@@ -300,7 +307,7 @@ export default function Class10Dashboard({ setActivePage }) {
           value={
             allTestsCompleted
               ? "Generate final stream recommendation"
-              : "Complete all assessments"
+              : "Complete Round 1 assessments"
           }
           small
         />
@@ -326,7 +333,9 @@ export default function Class10Dashboard({ setActivePage }) {
 
                   <div className="cx-test-info">
                     <h4>{test.name}</h4>
-                    <p>{test.status}</p>
+                    <p>
+                      {test.status} · {test.attempted}/{test.total} questions
+                    </p>
                   </div>
 
                   <strong className="cx-score">{test.percentage}%</strong>
@@ -356,7 +365,7 @@ export default function Class10Dashboard({ setActivePage }) {
               className="cx-action-btn"
               onClick={() => setActivePage("assessment:riasec")}
             >
-              <span>▶️ Start Assessment</span>
+              <span>▶️ Start Round 1 Assessment</span>
               <b>›</b>
             </button>
 
@@ -368,7 +377,9 @@ export default function Class10Dashboard({ setActivePage }) {
               <span>
                 {!allTestsCompleted
                   ? "🔒 Generate Recommendation"
-                  : `✨ ${generating ? "Generating..." : "Generate Recommendation"}`}
+                  : `✨ ${
+                      generating ? "Generating..." : "Generate Recommendation"
+                    }`}
               </span>
               <b>›</b>
             </button>
@@ -405,7 +416,9 @@ export default function Class10Dashboard({ setActivePage }) {
               onClick={() => openLockedModule("final-report")}
             >
               <span>
-                {allTestsCompleted ? "📄 View Final Report" : "🔒 Final Report Locked"}
+                {allTestsCompleted
+                  ? "📄 View Final Report"
+                  : "🔒 Final Report Locked"}
               </span>
               <b>›</b>
             </button>
@@ -417,10 +430,10 @@ export default function Class10Dashboard({ setActivePage }) {
 
               <div>
                 <p>Result Modules Locked</p>
-                <h3>Complete all 7 tests</h3>
+                <h3>Complete Round 1 of all 7 tests</h3>
                 <h4>
-                  Stream Explorer, Career Explorer, and Final Report will unlock
-                  after assessment completion.
+                  Stream Explorer, Career Explorer, and Final Report unlock
+                  after 20 questions from each assessment are completed.
                 </h4>
               </div>
             </div>
@@ -432,7 +445,8 @@ export default function Class10Dashboard({ setActivePage }) {
                 <p>Latest Recommendation</p>
                 <h3>{streamName}</h3>
                 <h4>
-                  Match: <span>{matchScore ? `${matchScore}%` : "Generate first"}</span>
+                  Match:{" "}
+                  <span>{matchScore ? `${matchScore}%` : "Generate first"}</span>
                 </h4>
               </div>
             </div>

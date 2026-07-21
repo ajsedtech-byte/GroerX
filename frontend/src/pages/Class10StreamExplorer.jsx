@@ -4,34 +4,121 @@ import {
   generateClass10Recommendation,
 } from "../services/class10Api";
 
-const fallbackData = {
-  streamName: "Commerce",
-  matchScore: 96,
-  summary:
-    "The student shows alignment with commerce, management, finance, and entrepreneurship. Commerce can be suitable if the student enjoys business, money, systems, and decision-making.",
-  reasons: [
-    "Strong fit for business, finance, management, and entrepreneurship",
-    "Matches enterprising and conventional thinking patterns",
-    "Good for students interested in money, markets, and organization",
-  ],
-  subjects: ["Accountancy", "Business Studies", "Economics", "Mathematics"],
-  careers: ["CA", "Investment Banker", "Entrepreneur", "Business Analyst"],
-  streamMatches: [
-    { name: "Commerce", match: 96, icon: "💼" },
-    { name: "Science", match: 78, icon: "🔬" },
-    { name: "Arts / Humanities", match: 72, icon: "🎭" },
-    { name: "Vocational", match: 68, icon: "🛠️" },
-  ],
-};
+const TEST_TOTAL_QUESTIONS = 20;
+
+const REQUIRED_TESTS = [
+  {
+    key: "riasec",
+    name: "RIASEC Interest Test",
+  },
+  {
+    key: "aptitude",
+    name: "Aptitude Test",
+  },
+  {
+    key: "personality",
+    name: "Personality Test",
+  },
+  {
+    key: "academic-style",
+    name: "Academic Style Test",
+  },
+  {
+    key: "situational-iq",
+    name: "Situational IQ Test",
+  },
+  {
+    key: "values",
+    name: "Values Test",
+  },
+  {
+    key: "confidence",
+    name: "Confidence Test",
+  },
+];
+
+function safeParseArray(value) {
+  try {
+    const parsed = JSON.parse(value || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function getRoundOneAttemptedCount(testKey) {
+  const attempted = safeParseArray(
+    localStorage.getItem(`class10_attempted_${testKey}`)
+  );
+
+  const roundOneAttempts = attempted.filter((item) =>
+    String(item).startsWith("round-1-q-")
+  );
+
+  return Math.min(
+    TEST_TOTAL_QUESTIONS,
+    Array.from(new Set(roundOneAttempts)).length
+  );
+}
+
+function getTestProgress() {
+  return REQUIRED_TESTS.map((test) => {
+    const attempted = getRoundOneAttemptedCount(test.key);
+
+    return {
+      ...test,
+      attempted,
+      completed: attempted >= TEST_TOTAL_QUESTIONS,
+      percentage: Math.min(
+        100,
+        Math.round((attempted / TEST_TOTAL_QUESTIONS) * 100)
+      ),
+    };
+  });
+}
+
+function areAllRoundOneTestsCompleted() {
+  return getTestProgress().every((test) => test.completed);
+}
+
+function getCompletedCount() {
+  return getTestProgress().filter((test) => test.completed).length;
+}
+
+function hasValidRecommendation(recommendation) {
+  if (!recommendation) return false;
+
+  const rawStream =
+    recommendation?.recommendedStream ||
+    recommendation?.topStream ||
+    recommendation?.stream ||
+    recommendation?.recommendation?.recommendedStream ||
+    null;
+
+  return Boolean(rawStream);
+}
 
 export default function Class10StreamExplorer({ setActivePage }) {
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [progressKey, setProgressKey] = useState(0);
+
+  const testProgress = useMemo(() => getTestProgress(), [progressKey]);
+  const completedCount = useMemo(() => getCompletedCount(), [progressKey]);
+  const allTestsCompleted = useMemo(
+    () => areAllRoundOneTestsCompleted(),
+    [progressKey]
+  );
 
   async function loadRecommendation() {
     try {
       setLoading(true);
+
+      if (!areAllRoundOneTestsCompleted()) {
+        setRecommendation(null);
+        return;
+      }
 
       const response = await getClass10Recommendation().catch(() => null);
       const data = response?.data || response?.recommendation || response;
@@ -44,9 +131,23 @@ export default function Class10StreamExplorer({ setActivePage }) {
 
   useEffect(() => {
     loadRecommendation();
+
+    const refreshOnFocus = () => {
+      setProgressKey((previous) => previous + 1);
+    };
+
+    window.addEventListener("focus", refreshOnFocus);
+
+    return () => {
+      window.removeEventListener("focus", refreshOnFocus);
+    };
   }, []);
 
   const streamData = useMemo(() => {
+    if (!allTestsCompleted || !hasValidRecommendation(recommendation)) {
+      return null;
+    }
+
     const raw = recommendation || {};
 
     const rawStream =
@@ -63,7 +164,7 @@ export default function Class10StreamExplorer({ setActivePage }) {
           rawStream?.title ||
           rawStream?.streamName ||
           raw.streamName ||
-          fallbackData.streamName;
+          "Recommended Stream";
 
     const matchScore =
       raw.matchScore ||
@@ -71,57 +172,72 @@ export default function Class10StreamExplorer({ setActivePage }) {
       rawStream?.matchScore ||
       rawStream?.match ||
       raw.recommendation?.matchScore ||
-      fallbackData.matchScore;
+      null;
 
     const summary =
       raw.summary ||
       rawStream?.summary ||
       raw.description ||
       raw.recommendation?.summary ||
-      fallbackData.summary;
+      "Your stream recommendation has been generated based on your completed Round 1 Class 10 assessment journey.";
 
     const reasons =
       raw.reasons ||
       raw.whyThisStream ||
       rawStream?.reasons ||
       rawStream?.why ||
-      fallbackData.reasons;
+      [
+        "This stream matches your completed Round 1 assessment profile.",
+        "Your interest, aptitude, confidence, and decision-making patterns were considered.",
+        "This recommendation should be discussed with parents, teachers, and counsellors before final selection.",
+      ];
 
     const subjects =
       raw.suggestedSubjects ||
       raw.subjects ||
       rawStream?.subjects ||
       rawStream?.suggestedSubjects ||
-      fallbackData.subjects;
+      ["Subject options will appear here after deeper report generation."];
 
     const careers =
       raw.suggestedCareers ||
       raw.careers ||
       rawStream?.careers ||
       rawStream?.suggestedCareers ||
-      fallbackData.careers;
+      ["Career directions will appear here after deeper report generation."];
 
     const streamMatches =
       raw.streamMatches ||
       raw.allStreamMatches ||
       raw.allStreams ||
       raw.matches ||
-      fallbackData.streamMatches;
+      [
+        {
+          name: streamName,
+          match: matchScore || 0,
+          icon: "🎓",
+        },
+      ];
 
     return {
       streamName,
       matchScore,
       summary,
-      reasons: Array.isArray(reasons) ? reasons : fallbackData.reasons,
-      subjects: Array.isArray(subjects) ? subjects : fallbackData.subjects,
-      careers: Array.isArray(careers) ? careers : fallbackData.careers,
-      streamMatches: Array.isArray(streamMatches)
-        ? streamMatches
-        : fallbackData.streamMatches,
+      reasons: Array.isArray(reasons) ? reasons : [],
+      subjects: Array.isArray(subjects) ? subjects : [],
+      careers: Array.isArray(careers) ? careers : [],
+      streamMatches: Array.isArray(streamMatches) ? streamMatches : [],
     };
-  }, [recommendation]);
+  }, [recommendation, allTestsCompleted]);
 
   async function handleGenerate() {
+    if (!allTestsCompleted) {
+      alert(
+        "Complete Round 1 of all 7 assessments first to generate your stream recommendation."
+      );
+      return;
+    }
+
     try {
       setGenerating(true);
       await generateClass10Recommendation();
@@ -139,7 +255,142 @@ export default function Class10StreamExplorer({ setActivePage }) {
         <div className="sx-loader-card">
           <div className="sx-loader-icon">🧭</div>
           <h2>Loading Stream Explorer...</h2>
-          <p>Please wait while we prepare your recommendation.</p>
+          <p>Please wait while we check your Round 1 progress.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!allTestsCompleted) {
+    return (
+      <section className="sx-page">
+        <style>{streamCss}</style>
+
+        <div className="sx-bg-blob"></div>
+        <div className="sx-star">✦</div>
+
+        <div className="sx-locked-wrap">
+          <button
+            type="button"
+            className="sx-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="sx-locked-card">
+            <div className="sx-lock-icon">🔒</div>
+
+            <p className="sx-locked-eyebrow">Locked Module</p>
+
+            <h1>Stream Explorer Locked</h1>
+
+            <p className="sx-locked-text">
+              Complete Round 1 of all 7 Class 10 assessments first. Your
+              recommended stream, subjects, career directions, and match score
+              will appear only after the Round 1 journey is completed.
+            </p>
+
+            <div className="sx-locked-progress">
+              <div className="sx-progress-top">
+                <span>Round 1 Unlock Progress</span>
+                <strong>
+                  {completedCount}/{REQUIRED_TESTS.length}
+                </strong>
+              </div>
+
+              <div className="sx-progress-track">
+                <div
+                  style={{
+                    width: `${Math.round(
+                      (completedCount / REQUIRED_TESTS.length) * 100
+                    )}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="sx-required-list">
+              {testProgress.map((test) => (
+                <div
+                  key={test.key}
+                  className={`sx-required-item ${test.completed ? "done" : ""}`}
+                >
+                  <span>{test.completed ? "✓" : "•"}</span>
+                  <p>{test.name}</p>
+                  <strong>
+                    {test.attempted}/{TEST_TOTAL_QUESTIONS}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="sx-locked-actions">
+              <button
+                type="button"
+                onClick={() => setActivePage("assessment:riasec")}
+              >
+                Go to Career Assessment
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!streamData) {
+    return (
+      <section className="sx-page">
+        <style>{streamCss}</style>
+
+        <div className="sx-bg-blob"></div>
+        <div className="sx-star">✦</div>
+
+        <div className="sx-locked-wrap">
+          <button
+            type="button"
+            className="sx-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="sx-locked-card">
+            <div className="sx-lock-icon">✨</div>
+
+            <p className="sx-locked-eyebrow">Round 1 Completed</p>
+
+            <h1>Generate Your Stream Recommendation</h1>
+
+            <p className="sx-locked-text">
+              Round 1 of all 7 assessments is complete. Now generate your stream
+              recommendation to unlock stream details, subjects, and career
+              directions.
+            </p>
+
+            <div className="sx-locked-actions">
+              <button type="button" onClick={handleGenerate}>
+                {generating ? "Generating..." : "Generate Recommendation"}
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -171,8 +422,8 @@ export default function Class10StreamExplorer({ setActivePage }) {
             <h1>Stream Explorer</h1>
 
             <h3>
-              Explore Class 11 stream options based on your Class 10 assessment
-              results.
+              Explore Class 11 stream options based on completed Round 1
+              assessment results.
             </h3>
           </div>
 
@@ -192,7 +443,12 @@ export default function Class10StreamExplorer({ setActivePage }) {
             <h2>{streamData.streamName}</h2>
 
             <p className="sx-match-line">
-              Match Score: <span>{streamData.matchScore}%</span>
+              Match Score:{" "}
+              <span>
+                {streamData.matchScore
+                  ? `${streamData.matchScore}%`
+                  : "Pending"}
+              </span>
             </p>
 
             <p className="sx-summary">{streamData.summary}</p>
@@ -217,7 +473,7 @@ export default function Class10StreamExplorer({ setActivePage }) {
 
           <div className="sx-match-circle">
             <div>
-              <strong>{streamData.matchScore}%</strong>
+              <strong>{streamData.matchScore || "--"}%</strong>
               <span>Career Match</span>
             </div>
           </div>
@@ -759,6 +1015,172 @@ const streamCss = `
   color: #64748b;
 }
 
+/* Locked screen */
+.sx-locked-wrap {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sx-locked-card {
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
+  border: 1px solid #d6e6ff;
+  border-radius: 30px;
+  padding: 42px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 43, 120, 0.10);
+}
+
+.sx-lock-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  margin: 0 auto 22px;
+  background: linear-gradient(135deg, #005BFF, #00A3FF);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  box-shadow: 0 18px 36px rgba(0, 91, 255, 0.24);
+}
+
+.sx-locked-eyebrow {
+  margin: 0 0 10px;
+  color: #005BFF;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.sx-locked-card h1 {
+  margin: 0;
+  color: #071B5F;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  font-weight: 950;
+}
+
+.sx-locked-text {
+  max-width: 560px;
+  margin: 14px auto 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 650;
+}
+
+.sx-locked-progress {
+  margin-top: 26px;
+  padding: 18px;
+  border: 1px solid #d6e6ff;
+  border-radius: 18px;
+  background: #f6faff;
+}
+
+.sx-progress-top {
+  display: flex;
+  justify-content: space-between;
+  color: #071B5F;
+  font-size: 14px;
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+
+.sx-progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #e6f0ff;
+  overflow: hidden;
+}
+
+.sx-progress-track div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #005BFF, #00A3FF);
+}
+
+.sx-required-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 9px;
+}
+
+.sx-required-item {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 26px 1fr 72px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e6f0ff;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.sx-required-item span {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+}
+
+.sx-required-item.done span {
+  background: #dcfce7;
+  color: #08a63f;
+}
+
+.sx-required-item p {
+  margin: 0;
+  color: #071B5F;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.sx-required-item strong {
+  color: #005BFF;
+  font-size: 13px;
+  font-weight: 950;
+  text-align: right;
+}
+
+.sx-locked-actions {
+  margin-top: 26px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sx-locked-actions button {
+  border: none;
+  background: linear-gradient(135deg, #005BFF, #00A3FF);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.sx-locked-actions button.secondary {
+  background: #ffffff;
+  color: #005BFF;
+  border: 1px solid #bfd7ff;
+}
+
 @media (max-width: 1100px) {
   .sx-content-grid {
     grid-template-columns: 1fr;
@@ -771,6 +1193,41 @@ const streamCss = `
   .sx-match-circle {
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .sx-content {
+    padding: 18px;
+  }
+
+  .sx-header {
+    flex-direction: column;
+  }
+
+  .sx-hero-card {
+    padding: 20px;
+  }
+
+  .sx-content-grid {
+    gap: 12px;
+  }
+
+  .sx-stream-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .sx-locked-wrap {
+    padding: 18px;
+  }
+
+  .sx-locked-card {
+    padding: 28px 20px;
+  }
+
+  .sx-locked-card h1 {
+    font-size: 28px;
   }
 }
 
@@ -846,4 +1303,3 @@ const streamCss = `
   }
 }
 `;
-

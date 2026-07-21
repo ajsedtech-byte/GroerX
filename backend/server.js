@@ -1,65 +1,67 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import cors from "cors";
+import morgan from "morgan";
+import dotenv from "dotenv";
+import class10Routes from "./routes/class10Routes.js";
 
-import careerRoutes from "./src/routes/careerRoutes.js";
-import testRoutes from "./src/routes/testRoutes.js";
-import adminQuestionRoutes from "./src/routes/adminQuestionRoutes.js";
-import reportRoutes from "./src/routes/reportRoutes.js";
-import streamRoutes from "./src/routes/streamRoutes.js";
-import class10Routes from "./src/routes/class10Routes.js";
+dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175",
-  "http://localhost:5176",
-];
-
+/*
+  TEMP PUBLIC CORS FIX
+  This allows GroerX frontend from any Vercel domain/device.
+  We can restrict this later after testing.
+*/
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use(express.json({ limit: "20mb" }));
+app.options("*", cors());
+
+app.use(express.json({ limit: "10mb" }));
+app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message: "GroerX Career Engine API running without MongoDB temporarily",
+    message: "GroerX API running",
   });
 });
 
 app.get("/health", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message: "GroerX API is healthy",
-    database: "temporarily disabled",
+    status: "healthy",
+    message: "GroerX backend is live",
   });
 });
 
-app.use("/api/tests", testRoutes);
-app.use("/api/careers", careerRoutes);
-app.use("/api/reports", reportRoutes);
-app.use("/api/admin/questions", adminQuestionRoutes);
-app.use("/api/streams", streamRoutes);
 app.use("/api/class10", class10Routes);
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error("Server Error:", err.message);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Internal server error",
+  });
+});
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log("MongoDB connection is temporarily disabled.");
+  console.log(`GroerX API running on ${PORT}`);
+  console.log("Your service is live 🎉");
 });

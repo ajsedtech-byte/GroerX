@@ -4,16 +4,55 @@ import { profileConfigs } from "./config/profileModules.js";
 
 import GroerXLayout from "./components/GroerXLayout.jsx";
 
+import Auth from "./pages/Auth.jsx";
 import ProfileSelection from "./pages/ProfileSelection.jsx";
 import ProfileDashboard from "./pages/ProfileDashboard.jsx";
 
 import Class10Dashboard from "./pages/Class10Dashboard.jsx";
 import Class10Assessment from "./pages/Class10Assessment.jsx";
-import Class10LearningPath from "./pages/Class10LearningPath.jsx";
 import Class10StreamExplorer from "./pages/Class10StreamExplorer.jsx";
 import Class10CareerExplorer from "./pages/Class10CareerExplorer.jsx";
 import Class10FinalReport from "./pages/Class10FinalReport.jsx";
-function LockedLearningPath() {
+
+function getSavedUser() {
+  try {
+    const savedUser = localStorage.getItem("groerx_user");
+
+    if (!savedUser) {
+      return null;
+    }
+
+    const parsedUser = JSON.parse(savedUser);
+
+    if (!parsedUser || parsedUser.isLoggedIn !== true) {
+      return null;
+    }
+
+    return parsedUser;
+  } catch {
+    return null;
+  }
+}
+
+function getSavedProfile() {
+  return (
+    localStorage.getItem("groerx_selected_profile") ||
+    localStorage.getItem("selectedProfile") ||
+    ""
+  );
+}
+
+function getDefaultModule(profileKey) {
+  const profile = profileConfigs[profileKey];
+
+  if (!profile) {
+    return "dashboard";
+  }
+
+  return profile.defaultModule || "dashboard";
+}
+
+function LockedLearningPath({ setActivePage }) {
   return (
     <section
       style={{
@@ -97,7 +136,7 @@ function LockedLearningPath() {
 
         <button
           type="button"
-          onClick={() => window.location.reload()}
+          onClick={() => setActivePage("dashboard")}
           style={{
             marginTop: "28px",
             border: "none",
@@ -117,45 +156,113 @@ function LockedLearningPath() {
     </section>
   );
 }
+
 export default function App() {
-  const [selectedProfile, setSelectedProfile] = useState(
-    localStorage.getItem("selectedProfile") || ""
-  );
+  const [loggedUser, setLoggedUser] = useState(getSavedUser());
+
+  const [selectedProfile, setSelectedProfile] = useState(() => {
+    const savedProfile = getSavedProfile();
+
+    if (!savedProfile) {
+      return "";
+    }
+
+    if (!profileConfigs[savedProfile]) {
+      return "";
+    }
+
+    return savedProfile;
+  });
 
   const [currentModule, setCurrentModule] = useState(
     localStorage.getItem("currentModule") || "dashboard"
   );
 
-  const selectProfile = (profileKey) => {
+  function handleAuthSuccess(user) {
+    const profileKey = user?.profile || "class10";
+    const validProfileKey = profileConfigs[profileKey] ? profileKey : "class10";
+    const defaultModule = getDefaultModule(validProfileKey);
+
+    const finalUser = {
+      ...user,
+      profile: validProfileKey,
+      isLoggedIn: true,
+    };
+
+    localStorage.setItem("groerx_user", JSON.stringify(finalUser));
+    localStorage.setItem("groerx_selected_profile", validProfileKey);
+
+    localStorage.setItem("selectedProfile", validProfileKey);
+    localStorage.setItem("currentModule", defaultModule);
+
+    setLoggedUser(finalUser);
+    setSelectedProfile(validProfileKey);
+    setCurrentModule(defaultModule);
+  }
+
+  function selectProfile(profileKey) {
     const profile = profileConfigs[profileKey];
 
+    if (!profile) {
+      return;
+    }
+
+    const defaultModule = profile.defaultModule || "dashboard";
+
+    const updatedUser = {
+      ...(loggedUser || {}),
+      profile: profileKey,
+      isLoggedIn: true,
+    };
+
+    localStorage.setItem("groerx_user", JSON.stringify(updatedUser));
+    localStorage.setItem("groerx_selected_profile", profileKey);
+
     localStorage.setItem("selectedProfile", profileKey);
-    localStorage.setItem("currentModule", profile.defaultModule);
+    localStorage.setItem("currentModule", defaultModule);
 
+    setLoggedUser(updatedUser);
     setSelectedProfile(profileKey);
-    setCurrentModule(profile.defaultModule);
-  };
+    setCurrentModule(defaultModule);
+  }
 
-  const switchProfile = () => {
+  function logout() {
+    localStorage.removeItem("groerx_user");
+    localStorage.removeItem("groerx_selected_profile");
+
     localStorage.removeItem("selectedProfile");
     localStorage.removeItem("currentModule");
     localStorage.removeItem("studentName");
     localStorage.removeItem("studentMobile");
 
+    setLoggedUser(null);
     setSelectedProfile("");
     setCurrentModule("dashboard");
-  };
+  }
 
-  const setActivePage = (page) => {
+  function setActivePage(page) {
     localStorage.setItem("currentModule", page);
     setCurrentModule(page);
-  };
+  }
+
+  if (!loggedUser) {
+    return (
+      <Auth
+        setActivePage={setActivePage}
+        onAuthSuccess={handleAuthSuccess}
+      />
+    );
+  }
 
   if (!selectedProfile) {
     return <ProfileSelection onSelectProfile={selectProfile} />;
   }
 
   const profile = profileConfigs[selectedProfile];
+
+  if (!profile) {
+    return <ProfileSelection onSelectProfile={selectProfile} />;
+  }
 
   let page = null;
 
@@ -166,9 +273,33 @@ export default function App() {
       page = <Class10Dashboard setActivePage={setActivePage} />;
     }
 
-if (currentModule === "learning-path") {
-  page = <LockedLearningPath />;
-}
+    if (
+      currentModule === "career-assessment" ||
+      currentModule === "assessment"
+    ) {
+      page = (
+        <Class10Assessment
+          testType="riasec"
+          setActivePage={setActivePage}
+        />
+      );
+    }
+
+    if (currentModule.startsWith("assessment:")) {
+      const testType = currentModule.split(":")[1] || "riasec";
+
+      page = (
+        <Class10Assessment
+          testType={testType}
+          setActivePage={setActivePage}
+        />
+      );
+    }
+
+    if (currentModule === "learning-path") {
+      page = <LockedLearningPath setActivePage={setActivePage} />;
+    }
+
     if (currentModule === "stream-explorer") {
       page = <Class10StreamExplorer setActivePage={setActivePage} />;
     }
@@ -179,17 +310,6 @@ if (currentModule === "learning-path") {
 
     if (currentModule === "final-report") {
       page = <Class10FinalReport setActivePage={setActivePage} />;
-    }
-
-    if (currentModule.startsWith("assessment:")) {
-      const testType = currentModule.split(":")[1];
-
-      page = (
-        <Class10Assessment
-          testType={testType}
-          setActivePage={setActivePage}
-        />
-      );
     }
   } else {
     page = (
@@ -205,11 +325,9 @@ if (currentModule === "learning-path") {
       profile={profile}
       currentModule={currentModule}
       setActivePage={setActivePage}
-      onSwitchProfile={switchProfile}
+      onSwitchProfile={logout}
     >
       {page}
     </GroerXLayout>
   );
 }
-
-

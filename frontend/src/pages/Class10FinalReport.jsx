@@ -1,64 +1,89 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getClass10FinalReport } from "../services/class10Api";
 
-const fallbackReport = {
-  completion: 100,
-  recommendedStream: "Commerce",
-  matchScore: 96,
-  hollandCode: "REA",
-  summary:
-    "The student shows alignment with commerce, management, finance, and entrepreneurship. Commerce can be suitable if the student enjoys business, money, systems, and decision-making.",
-  whyThisStream: [
-    "Strong fit for business, finance, management, and entrepreneurship.",
-    "Matches enterprising and conventional thinking patterns.",
-    "Good for students interested in money, markets, and organization.",
-  ],
-  strengths: [
-    "Business thinking",
-    "Decision-making ability",
-    "Structured thinking",
-    "Interest in finance and management",
-  ],
-  improvementAreas: [
-    "Improve mathematical confidence",
-    "Build communication skills",
-    "Practice financial reasoning",
-    "Explore real-world business case studies",
-  ],
-  suggestedSubjects: ["Accountancy", "Business Studies", "Economics", "Mathematics"],
-  suggestedCareers: [
-    "Chartered Accountant",
-    "Business Analyst",
-    "Investment Banker",
-    "Entrepreneur",
-    "Product Manager",
-  ],
-  assessmentScores: [
-    { name: "RIASEC Interest Test", score: 75 },
-    { name: "Aptitude Test", score: 90 },
-    { name: "Personality Test", score: 100 },
-    { name: "Academic Style Test", score: 100 },
-    { name: "Situational IQ Test", score: 100 },
-    { name: "Values Test", score: 100 },
-    { name: "Confidence Test", score: 100 },
-  ],
-  parentGuidance:
-    "Parents should support the student by encouraging exposure to business, money management, communication, and decision-making activities instead of forcing a stream based only on marks.",
-  roadmap: [
-    "Explore Commerce subjects in detail.",
-    "Talk to seniors, teachers, and professionals from commerce fields.",
-    "Start basic financial literacy and business case study reading.",
-    "Build confidence in Mathematics and communication.",
-    "Create a 30-day stream exploration plan before final admission.",
-  ],
-};
+const TEST_TOTAL_QUESTIONS = 20;
 
-function normalizeArray(value, fallback) {
+const REQUIRED_TESTS = [
+  { key: "riasec", name: "RIASEC Interest Test" },
+  { key: "aptitude", name: "Aptitude Test" },
+  { key: "personality", name: "Personality Test" },
+  { key: "academic-style", name: "Academic Style Test" },
+  { key: "situational-iq", name: "Situational IQ Test" },
+  { key: "values", name: "Values Test" },
+  { key: "confidence", name: "Confidence Test" },
+];
+
+function safeParseArray(value) {
+  try {
+    const parsed = JSON.parse(value || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function getRoundOneAttemptedCount(testKey) {
+  const attempted = safeParseArray(
+    localStorage.getItem(`class10_attempted_${testKey}`)
+  );
+
+  const roundOneAttempts = attempted.filter((item) =>
+    String(item).startsWith("round-1-q-")
+  );
+
+  return Math.min(
+    TEST_TOTAL_QUESTIONS,
+    Array.from(new Set(roundOneAttempts)).length
+  );
+}
+
+function getTestProgress() {
+  return REQUIRED_TESTS.map((test) => {
+    const attempted = getRoundOneAttemptedCount(test.key);
+
+    return {
+      ...test,
+      attempted,
+      completed: attempted >= TEST_TOTAL_QUESTIONS,
+      percentage: Math.min(
+        100,
+        Math.round((attempted / TEST_TOTAL_QUESTIONS) * 100)
+      ),
+    };
+  });
+}
+
+function areAllRoundOneTestsCompleted() {
+  return getTestProgress().every((test) => test.completed);
+}
+
+function getCompletedCount() {
+  return getTestProgress().filter((test) => test.completed).length;
+}
+
+function normalizeArray(value, fallback = []) {
   if (Array.isArray(value) && value.length > 0) return value;
   return fallback;
 }
 
+function hasValidReport(rawReport) {
+  if (!rawReport) return false;
+
+  const rawStream =
+    rawReport.recommendedStream ||
+    rawReport.stream ||
+    rawReport.topStream ||
+    rawReport.recommendation?.recommendedStream ||
+    null;
+
+  return Boolean(rawStream);
+}
+
 function normalizeReport(rawReport) {
+  if (!hasValidReport(rawReport)) {
+    return null;
+  }
+
   const raw = rawReport || {};
 
   const rawStream =
@@ -75,29 +100,29 @@ function normalizeReport(rawReport) {
         rawStream?.title ||
         rawStream?.streamName ||
         raw.streamName ||
-        fallbackReport.recommendedStream;
+        "Recommended Stream";
+
+  const matchScore =
+    raw.matchScore ||
+    raw.match ||
+    rawStream?.matchScore ||
+    rawStream?.match ||
+    raw.recommendation?.matchScore ||
+    null;
 
   return {
     completion:
-      raw.completion ||
-      raw.completionPercentage ||
-      raw.progressPercent ||
-      fallbackReport.completion,
+      raw.completion || raw.completionPercentage || raw.progressPercent || 100,
 
     recommendedStream,
 
-    matchScore:
-      raw.matchScore ||
-      raw.match ||
-      rawStream?.matchScore ||
-      raw.recommendation?.matchScore ||
-      fallbackReport.matchScore,
+    matchScore,
 
     hollandCode:
       raw.hollandCode ||
       raw.profile?.hollandCode ||
       raw.recommendation?.hollandCode ||
-      fallbackReport.hollandCode,
+      "Pending",
 
     summary:
       raw.summary ||
@@ -105,47 +130,68 @@ function normalizeReport(rawReport) {
       raw.recommendationSummary ||
       rawStream?.summary ||
       raw.recommendation?.summary ||
-      fallbackReport.summary,
+      "This report has been generated after completing Round 1 of all Class 10 assessments. The stream direction should be reviewed with parents, teachers, and counsellors before final decision-making.",
 
     whyThisStream: normalizeArray(
       raw.whyThisStream || raw.reasons || rawStream?.reasons,
-      fallbackReport.whyThisStream
+      [
+        "This stream matches the student's completed Round 1 assessment profile.",
+        "Interest, aptitude, personality, learning style, values, situational intelligence, and confidence were considered.",
+        "The recommendation should support decision-making, not replace parent and counsellor discussion.",
+      ]
     ),
 
     strengths: normalizeArray(
       raw.strengths || raw.studentStrengths || raw.profile?.strengths,
-      fallbackReport.strengths
+      [
+        "Self-awareness from completed Round 1 assessments",
+        "Career direction clarity",
+        "Stream exploration readiness",
+      ]
     ),
 
     improvementAreas: normalizeArray(
       raw.improvementAreas || raw.weaknesses || raw.developmentAreas,
-      fallbackReport.improvementAreas
+      [
+        "Discuss stream choice with parents",
+        "Explore subjects in detail",
+        "Build communication and study consistency",
+      ]
     ),
 
     suggestedSubjects: normalizeArray(
       raw.suggestedSubjects || raw.subjects || rawStream?.subjects,
-      fallbackReport.suggestedSubjects
+      ["Subjects will depend on the final stream and school options."]
     ),
 
     suggestedCareers: normalizeArray(
       raw.suggestedCareers || raw.careers || rawStream?.careers,
-      fallbackReport.suggestedCareers
+      ["Career options will be explored in Career Explorer."]
     ),
 
     assessmentScores: normalizeArray(
       raw.assessmentScores || raw.scores || raw.testScores,
-      fallbackReport.assessmentScores
+      REQUIRED_TESTS.map((test) => ({
+        name: test.name,
+        score: 100,
+      }))
     ),
 
     parentGuidance:
       raw.parentGuidance ||
       raw.guidanceForParents ||
       raw.parentNote ||
-      fallbackReport.parentGuidance,
+      "Parents should use this report as a structured guidance tool. The final decision should be made after understanding the student's interest, confidence, learning style, and long-term career possibilities.",
 
     roadmap: normalizeArray(
       raw.roadmap || raw.nextSteps || raw.thirtyDayRoadmap,
-      fallbackReport.roadmap
+      [
+        "Review the recommended stream with parents.",
+        "Explore the suggested subjects in detail.",
+        "Talk to seniors, teachers, or counsellors.",
+        "Understand career options connected to the stream.",
+        "Create a 30-day stream exploration plan.",
+      ]
     ),
   };
 }
@@ -153,10 +199,23 @@ function normalizeReport(rawReport) {
 export default function Class10FinalReport({ setActivePage }) {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [progressKey, setProgressKey] = useState(0);
+
+  const testProgress = useMemo(() => getTestProgress(), [progressKey]);
+  const completedCount = useMemo(() => getCompletedCount(), [progressKey]);
+  const allTestsCompleted = useMemo(
+    () => areAllRoundOneTestsCompleted(),
+    [progressKey]
+  );
 
   async function loadReport() {
     try {
       setLoading(true);
+
+      if (!areAllRoundOneTestsCompleted()) {
+        setReport(null);
+        return;
+      }
 
       const response = await getClass10FinalReport().catch(() => null);
       const data = response?.data || response?.report || response;
@@ -169,9 +228,22 @@ export default function Class10FinalReport({ setActivePage }) {
 
   useEffect(() => {
     loadReport();
+
+    const refreshOnFocus = () => {
+      setProgressKey((previous) => previous + 1);
+    };
+
+    window.addEventListener("focus", refreshOnFocus);
+
+    return () => {
+      window.removeEventListener("focus", refreshOnFocus);
+    };
   }, []);
 
-  const reportData = useMemo(() => normalizeReport(report), [report]);
+  const reportData = useMemo(() => {
+    if (!allTestsCompleted) return null;
+    return normalizeReport(report);
+  }, [report, allTestsCompleted]);
 
   function handlePrint() {
     window.print();
@@ -185,7 +257,145 @@ export default function Class10FinalReport({ setActivePage }) {
         <div className="fr-loader-card">
           <div className="fr-loader-icon">📄</div>
           <h2>Loading Final Report...</h2>
-          <p>Preparing the student career direction report.</p>
+          <p>Checking Round 1 completion first.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!allTestsCompleted) {
+    return (
+      <section className="fr-page">
+        <style>{reportCss}</style>
+
+        <div className="fr-bg-blob"></div>
+        <div className="fr-star">✦</div>
+
+        <div className="fr-locked-wrap">
+          <button
+            type="button"
+            className="fr-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="fr-locked-card">
+            <div className="fr-lock-icon">🔒</div>
+
+            <p className="fr-locked-eyebrow">Locked Module</p>
+
+            <h1>Final Report Locked</h1>
+
+            <p className="fr-locked-text">
+              Complete Round 1 of all 7 Class 10 assessments first. The final
+              career report will appear only after the Round 1 journey is
+              completed.
+            </p>
+
+            <div className="fr-locked-progress">
+              <div className="fr-progress-top">
+                <span>Round 1 Unlock Progress</span>
+                <strong>
+                  {completedCount}/{REQUIRED_TESTS.length}
+                </strong>
+              </div>
+
+              <div className="fr-progress-track">
+                <div
+                  style={{
+                    width: `${Math.round(
+                      (completedCount / REQUIRED_TESTS.length) * 100
+                    )}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="fr-required-list">
+              {testProgress.map((test) => (
+                <div
+                  key={test.key}
+                  className={`fr-required-item ${test.completed ? "done" : ""}`}
+                >
+                  <span>{test.completed ? "✓" : "•"}</span>
+                  <p>{test.name}</p>
+                  <strong>
+                    {test.attempted}/{TEST_TOTAL_QUESTIONS}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="fr-locked-actions">
+              <button
+                type="button"
+                onClick={() => setActivePage("assessment:riasec")}
+              >
+                Go to Career Assessment
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!reportData) {
+    return (
+      <section className="fr-page">
+        <style>{reportCss}</style>
+
+        <div className="fr-bg-blob"></div>
+        <div className="fr-star">✦</div>
+
+        <div className="fr-locked-wrap">
+          <button
+            type="button"
+            className="fr-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="fr-locked-card">
+            <div className="fr-lock-icon">✨</div>
+
+            <p className="fr-locked-eyebrow">Report Not Ready</p>
+
+            <h1>Generate Stream Recommendation First</h1>
+
+            <p className="fr-locked-text">
+              Round 1 of all 7 assessments is complete. Please open Stream
+              Explorer and generate your stream recommendation first. The final
+              report will be available after the recommendation is created.
+            </p>
+
+            <div className="fr-locked-actions">
+              <button
+                type="button"
+                onClick={() => setActivePage("stream-explorer")}
+              >
+                Go to Stream Explorer
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -231,7 +441,11 @@ export default function Class10FinalReport({ setActivePage }) {
               🧭 Stream Explorer
             </button>
 
-            <button type="button" className="fr-primary-action" onClick={handlePrint}>
+            <button
+              type="button"
+              className="fr-primary-action"
+              onClick={handlePrint}
+            >
               📥 Download / Print
             </button>
           </div>
@@ -251,16 +465,35 @@ export default function Class10FinalReport({ setActivePage }) {
               </p>
 
               <div className="fr-metrics-grid">
-                <MetricCard label="Completion" value={`${reportData.completion}%`} />
-                <MetricCard label="Recommended Stream" value={reportData.recommendedStream} />
-                <MetricCard label="Match Score" value={`${reportData.matchScore}%`} />
-                <MetricCard label="Holland Code" value={reportData.hollandCode} />
+                <MetricCard
+                  label="Completion"
+                  value={`${reportData.completion}%`}
+                />
+
+                <MetricCard
+                  label="Recommended Stream"
+                  value={reportData.recommendedStream}
+                />
+
+                <MetricCard
+                  label="Match Score"
+                  value={
+                    reportData.matchScore
+                      ? `${reportData.matchScore}%`
+                      : "Pending"
+                  }
+                />
+
+                <MetricCard
+                  label="Holland Code"
+                  value={reportData.hollandCode}
+                />
               </div>
             </div>
 
             <div className="fr-match-circle">
               <div>
-                <strong>{reportData.matchScore}%</strong>
+                <strong>{reportData.matchScore || "--"}%</strong>
                 <span>Match</span>
               </div>
             </div>
@@ -268,7 +501,9 @@ export default function Class10FinalReport({ setActivePage }) {
 
           <section className="fr-main-grid">
             <Card title="Final Recommendation" icon="🎯" large>
-              <h3 className="fr-stream-name">{reportData.recommendedStream}</h3>
+              <h3 className="fr-stream-name">
+                {reportData.recommendedStream}
+              </h3>
               <p className="fr-body-text">{reportData.summary}</p>
             </Card>
 
@@ -438,11 +673,11 @@ const reportCss = `
 }
 
 .fr-page::-webkit-scrollbar-track {
-  background: #f3efff;
+  background: #EFF6FF;
 }
 
 .fr-page::-webkit-scrollbar-thumb {
-  background: #60A5FA;
+  background: linear-gradient(180deg, #005BFF, #00A3FF);
   border-radius: 999px;
 }
 
@@ -566,7 +801,7 @@ const reportCss = `
 }
 
 .fr-hero-card {
-  border: 1px solid #e7e2f4;
+  border: 1px solid #D6E6FF;
   background: linear-gradient(135deg, #ffffff 0%, #F6FAFF 100%);
   border-radius: 24px;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
@@ -680,7 +915,7 @@ const reportCss = `
 
 .fr-card,
 .fr-roadmap-card {
-  border: 1px solid #e7e2f4;
+  border: 1px solid #D6E6FF;
   background: #ffffff;
   border-radius: 22px;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.055);
@@ -932,7 +1167,7 @@ const reportCss = `
 .fr-loader-card {
   width: 360px;
   background: white;
-  border: 1px solid #e7e2f4;
+  border: 1px solid #D6E6FF;
   border-radius: 24px;
   padding: 34px;
   text-align: center;
@@ -954,6 +1189,172 @@ const reportCss = `
   color: #64748b;
 }
 
+/* Locked screen */
+.fr-locked-wrap {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fr-locked-card {
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+  background: #ffffff;
+  border: 1px solid #d6e6ff;
+  border-radius: 30px;
+  padding: 42px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 43, 120, 0.10);
+}
+
+.fr-lock-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  margin: 0 auto 22px;
+  background: linear-gradient(135deg, #005BFF, #00A3FF);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  box-shadow: 0 18px 36px rgba(0, 91, 255, 0.24);
+}
+
+.fr-locked-eyebrow {
+  margin: 0 0 10px;
+  color: #005BFF;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.fr-locked-card h1 {
+  margin: 0;
+  color: #071B5F;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  font-weight: 950;
+}
+
+.fr-locked-text {
+  max-width: 560px;
+  margin: 14px auto 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 650;
+}
+
+.fr-locked-progress {
+  margin-top: 26px;
+  padding: 18px;
+  border: 1px solid #d6e6ff;
+  border-radius: 18px;
+  background: #f6faff;
+}
+
+.fr-progress-top {
+  display: flex;
+  justify-content: space-between;
+  color: #071B5F;
+  font-size: 14px;
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+
+.fr-progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #e6f0ff;
+  overflow: hidden;
+}
+
+.fr-progress-track div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #005BFF, #00A3FF);
+}
+
+.fr-required-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 9px;
+}
+
+.fr-required-item {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 26px 1fr 72px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e6f0ff;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.fr-required-item span {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+}
+
+.fr-required-item.done span {
+  background: #dcfce7;
+  color: #08a63f;
+}
+
+.fr-required-item p {
+  margin: 0;
+  color: #071B5F;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.fr-required-item strong {
+  color: #005BFF;
+  font-size: 13px;
+  font-weight: 950;
+  text-align: right;
+}
+
+.fr-locked-actions {
+  margin-top: 26px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fr-locked-actions button {
+  border: none;
+  background: linear-gradient(135deg, #005BFF, #00A3FF);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.fr-locked-actions button.secondary {
+  background: #ffffff;
+  color: #005BFF;
+  border: 1px solid #bfd7ff;
+}
+
 @media (max-width: 1200px) {
   .fr-hero-card,
   .fr-main-grid,
@@ -971,6 +1372,51 @@ const reportCss = `
 
   .fr-roadmap-list {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .fr-content {
+    padding: 18px;
+  }
+
+  .fr-header {
+    flex-direction: column;
+  }
+
+  .fr-header h1 {
+    font-size: 30px;
+  }
+
+  .fr-header-actions {
+    margin-top: 0;
+    flex-wrap: wrap;
+  }
+
+  .fr-hero-left h2 {
+    font-size: 30px;
+  }
+
+  .fr-metrics-grid,
+  .fr-roadmap-list {
+    grid-template-columns: 1fr;
+  }
+
+  .fr-score-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .fr-locked-wrap {
+    padding: 18px;
+  }
+
+  .fr-locked-card {
+    padding: 28px 20px;
+  }
+
+  .fr-locked-card h1 {
+    font-size: 28px;
   }
 }
 
@@ -1048,6 +1494,3 @@ const reportCss = `
   }
 }
 `;
-
-
-

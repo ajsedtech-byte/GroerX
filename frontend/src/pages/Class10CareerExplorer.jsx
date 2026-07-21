@@ -1,6 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getClass10Recommendation } from "../services/class10Api";
 
+const TEST_TOTAL_QUESTIONS = 20;
+
+const REQUIRED_TESTS = [
+  { key: "riasec", name: "RIASEC Interest Test" },
+  { key: "aptitude", name: "Aptitude Test" },
+  { key: "personality", name: "Personality Test" },
+  { key: "academic-style", name: "Academic Style Test" },
+  { key: "situational-iq", name: "Situational IQ Test" },
+  { key: "values", name: "Values Test" },
+  { key: "confidence", name: "Confidence Test" },
+];
+
 const careerBank = {
   commerce: [
     {
@@ -47,17 +59,6 @@ const careerBank = {
         "Start learning business basics early. Build small projects, understand customers, and practice selling.",
       icon: "🚀",
     },
-    {
-      title: "Product Manager",
-      match: 86,
-      demand: "Very High",
-      salary: "₹12 - ₹45 LPA",
-      exams: ["BBA", "Engineering", "MBA", "Product Courses"],
-      skills: ["Product Thinking", "User Research", "Data", "Communication"],
-      roadmap:
-        "Combine commerce, technology, user psychology, and business skills. Build small digital products.",
-      icon: "🧩",
-    },
   ],
 
   science: [
@@ -94,6 +95,17 @@ const careerBank = {
         "Choose PCM. Build strong Mathematics and start learning Python, statistics, and AI basics.",
       icon: "🤖",
     },
+    {
+      title: "Architect",
+      match: 82,
+      demand: "High",
+      salary: "₹5 - ₹25 LPA",
+      exams: ["NATA", "JEE Paper 2"],
+      skills: ["Design", "Maths", "Drawing", "Planning"],
+      roadmap:
+        "Choose Science with Mathematics. Build design sense, spatial thinking, and prepare for architecture entrance exams.",
+      icon: "🏛️",
+    },
   ],
 
   arts: [
@@ -105,7 +117,7 @@ const careerBank = {
       exams: ["BA Psychology", "MA Psychology"],
       skills: ["Listening", "Human Behavior", "Research", "Empathy"],
       roadmap:
-        "Choose Humanities with Psychology. Build communication and research skills.",
+        "Choose Humanities with Psychology. Build communication, research, and counselling skills.",
       icon: "🧠",
     },
     {
@@ -116,35 +128,173 @@ const careerBank = {
       exams: ["CLAT", "AILET", "CUET"],
       skills: ["Reading", "Reasoning", "Writing", "Debating"],
       roadmap:
-        "Choose Humanities or Commerce. Prepare for CLAT with reasoning, GK, and reading practice.",
+        "Choose Humanities or Commerce. Prepare for CLAT with reasoning, GK, legal aptitude, and reading practice.",
       icon: "⚖️",
+    },
+    {
+      title: "Journalist",
+      match: 82,
+      demand: "Medium",
+      salary: "₹3 - ₹15 LPA",
+      exams: ["BA Journalism", "Mass Communication"],
+      skills: ["Writing", "Research", "Communication", "Storytelling"],
+      roadmap:
+        "Choose Humanities. Build writing, current affairs, public speaking, and digital media skills.",
+      icon: "📰",
+    },
+  ],
+
+  vocational: [
+    {
+      title: "UX Designer",
+      match: 88,
+      demand: "High",
+      salary: "₹5 - ₹25 LPA",
+      exams: ["Design Entrance", "Portfolio Based Courses"],
+      skills: ["Design Thinking", "User Research", "Figma", "Creativity"],
+      roadmap:
+        "Build design skills, create a portfolio, understand users, and learn digital product design tools.",
+      icon: "🎨",
+    },
+    {
+      title: "Digital Marketer",
+      match: 84,
+      demand: "High",
+      salary: "₹3 - ₹20 LPA",
+      exams: ["Marketing Courses", "BBA", "Certifications"],
+      skills: ["Content", "Analytics", "Sales", "Social Media"],
+      roadmap:
+        "Start with content creation, ads, branding, analytics, and real business campaigns.",
+      icon: "📣",
+    },
+    {
+      title: "Video Editor",
+      match: 80,
+      demand: "High",
+      salary: "₹3 - ₹18 LPA",
+      exams: ["Portfolio Based", "Media Courses"],
+      skills: ["Editing", "Storytelling", "Motion Graphics", "Creativity"],
+      roadmap:
+        "Build editing projects, learn storytelling, create a portfolio, and work on real content.",
+      icon: "🎬",
+    },
+  ],
+
+  general: [
+    {
+      title: "Career Research Track",
+      match: 75,
+      demand: "Growing",
+      salary: "Depends on path",
+      exams: ["Stream Based", "Skill Based"],
+      skills: ["Self Awareness", "Research", "Communication", "Consistency"],
+      roadmap:
+        "Explore multiple streams, complete counselling, talk to parents and mentors, and build a skill-based roadmap.",
+      icon: "🧭",
     },
   ],
 };
 
-const fallbackRecommendation = {
-  streamName: "Commerce",
-  matchScore: 96,
-};
+function safeParseArray(value) {
+  try {
+    const parsed = JSON.parse(value || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
-function getStreamKey(streamName = "Commerce") {
+function getRoundOneAttemptedCount(testKey) {
+  const attempted = safeParseArray(
+    localStorage.getItem(`class10_attempted_${testKey}`)
+  );
+
+  const roundOneAttempts = attempted.filter((item) =>
+    String(item).startsWith("round-1-q-")
+  );
+
+  return Math.min(
+    TEST_TOTAL_QUESTIONS,
+    Array.from(new Set(roundOneAttempts)).length
+  );
+}
+
+function getTestProgress() {
+  return REQUIRED_TESTS.map((test) => {
+    const attempted = getRoundOneAttemptedCount(test.key);
+
+    return {
+      ...test,
+      attempted,
+      completed: attempted >= TEST_TOTAL_QUESTIONS,
+      percentage: Math.min(
+        100,
+        Math.round((attempted / TEST_TOTAL_QUESTIONS) * 100)
+      ),
+    };
+  });
+}
+
+function areAllRoundOneTestsCompleted() {
+  return getTestProgress().every((test) => test.completed);
+}
+
+function getCompletedCount() {
+  return getTestProgress().filter((test) => test.completed).length;
+}
+
+function hasValidRecommendation(recommendation) {
+  if (!recommendation) return false;
+
+  const rawStream =
+    recommendation?.recommendedStream ||
+    recommendation?.topStream ||
+    recommendation?.stream ||
+    recommendation?.recommendation?.recommendedStream ||
+    null;
+
+  return Boolean(rawStream);
+}
+
+function getStreamKey(streamName = "") {
   const value = String(streamName).toLowerCase();
 
   if (value.includes("commerce")) return "commerce";
   if (value.includes("science")) return "science";
   if (value.includes("arts") || value.includes("humanities")) return "arts";
 
-  return "commerce";
+  if (
+    value.includes("vocational") ||
+    value.includes("skill") ||
+    value.includes("design")
+  ) {
+    return "vocational";
+  }
+
+  return "general";
 }
 
 export default function Class10CareerExplorer({ setActivePage }) {
   const [recommendation, setRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [progressKey, setProgressKey] = useState(0);
+
+  const testProgress = useMemo(() => getTestProgress(), [progressKey]);
+  const completedCount = useMemo(() => getCompletedCount(), [progressKey]);
+  const allTestsCompleted = useMemo(
+    () => areAllRoundOneTestsCompleted(),
+    [progressKey]
+  );
 
   async function loadRecommendation() {
     try {
       setLoading(true);
+
+      if (!areAllRoundOneTestsCompleted()) {
+        setRecommendation(null);
+        return;
+      }
 
       const response = await getClass10Recommendation().catch(() => null);
       const data = response?.data || response?.recommendation || response;
@@ -157,9 +307,23 @@ export default function Class10CareerExplorer({ setActivePage }) {
 
   useEffect(() => {
     loadRecommendation();
+
+    const refreshOnFocus = () => {
+      setProgressKey((previous) => previous + 1);
+    };
+
+    window.addEventListener("focus", refreshOnFocus);
+
+    return () => {
+      window.removeEventListener("focus", refreshOnFocus);
+    };
   }, []);
 
   const streamData = useMemo(() => {
+    if (!allTestsCompleted || !hasValidRecommendation(recommendation)) {
+      return null;
+    }
+
     const raw = recommendation || {};
 
     const rawStream =
@@ -176,7 +340,7 @@ export default function Class10CareerExplorer({ setActivePage }) {
           rawStream?.title ||
           rawStream?.streamName ||
           raw.streamName ||
-          fallbackRecommendation.streamName;
+          "Recommended Stream";
 
     const matchScore =
       raw.matchScore ||
@@ -184,13 +348,14 @@ export default function Class10CareerExplorer({ setActivePage }) {
       rawStream?.matchScore ||
       rawStream?.match ||
       raw.recommendation?.matchScore ||
-      fallbackRecommendation.matchScore;
+      null;
 
     return { streamName, matchScore };
-  }, [recommendation]);
+  }, [recommendation, allTestsCompleted]);
 
-  const streamKey = getStreamKey(streamData.streamName);
-  const careers = careerBank[streamKey] || careerBank.commerce;
+  const streamKey = streamData ? getStreamKey(streamData.streamName) : "general";
+  const careers = streamData ? careerBank[streamKey] || careerBank.general : [];
+  const topCareer = careers[0] || null;
 
   const filteredCareers = careers.filter((career) => {
     const query = searchTerm.trim().toLowerCase();
@@ -204,8 +369,6 @@ export default function Class10CareerExplorer({ setActivePage }) {
     );
   });
 
-  const topCareer = careers[0];
-
   if (loading) {
     return (
       <section className="ce-loading">
@@ -214,7 +377,143 @@ export default function Class10CareerExplorer({ setActivePage }) {
         <div className="ce-loader-card">
           <div className="ce-loader-icon">💼</div>
           <h2>Loading Career Explorer...</h2>
-          <p>Preparing career matches for your stream.</p>
+          <p>Checking Round 1 completion first.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!allTestsCompleted) {
+    return (
+      <section className="ce-page">
+        <style>{careerCss}</style>
+
+        <div className="ce-bg-blob"></div>
+
+        <div className="ce-locked-wrap">
+          <button
+            type="button"
+            className="ce-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="ce-locked-card">
+            <div className="ce-lock-icon">🔒</div>
+
+            <p className="ce-locked-eyebrow">Locked Module</p>
+
+            <h1>Career Explorer Locked</h1>
+
+            <p className="ce-locked-text">
+              Complete Round 1 of all 7 Class 10 assessments first. Career
+              matches, salary range, exams, skills, and roadmaps will appear
+              only after the Round 1 journey is completed.
+            </p>
+
+            <div className="ce-locked-progress">
+              <div className="ce-progress-top">
+                <span>Round 1 Unlock Progress</span>
+                <strong>
+                  {completedCount}/{REQUIRED_TESTS.length}
+                </strong>
+              </div>
+
+              <div className="ce-progress-track">
+                <div
+                  style={{
+                    width: `${Math.round(
+                      (completedCount / REQUIRED_TESTS.length) * 100
+                    )}%`,
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="ce-required-list">
+              {testProgress.map((test) => (
+                <div
+                  key={test.key}
+                  className={`ce-required-item ${test.completed ? "done" : ""}`}
+                >
+                  <span>{test.completed ? "✓" : "•"}</span>
+                  <p>{test.name}</p>
+                  <strong>
+                    {test.attempted}/{TEST_TOTAL_QUESTIONS}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="ce-locked-actions">
+              <button
+                type="button"
+                onClick={() => setActivePage("assessment:riasec")}
+              >
+                Go to Career Assessment
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!streamData || !topCareer) {
+    return (
+      <section className="ce-page">
+        <style>{careerCss}</style>
+
+        <div className="ce-bg-blob"></div>
+
+        <div className="ce-locked-wrap">
+          <button
+            type="button"
+            className="ce-back-btn"
+            onClick={() => setActivePage("dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+
+          <div className="ce-locked-card">
+            <div className="ce-lock-icon">✨</div>
+
+            <p className="ce-locked-eyebrow">Recommendation Required</p>
+
+            <h1>Generate Stream Recommendation First</h1>
+
+            <p className="ce-locked-text">
+              Round 1 of all 7 assessments is complete. Please open Stream
+              Explorer and generate the stream recommendation. Career matches
+              will unlock after the recommended stream is available.
+            </p>
+
+            <div className="ce-locked-actions">
+              <button
+                type="button"
+                onClick={() => setActivePage("stream-explorer")}
+              >
+                Go to Stream Explorer
+              </button>
+
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => setActivePage("dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -225,7 +524,6 @@ export default function Class10CareerExplorer({ setActivePage }) {
       <style>{careerCss}</style>
 
       <div className="ce-bg-blob"></div>
-      <div className="ce-star">✦</div>
 
       <div className="ce-content">
         <header className="ce-header">
@@ -272,9 +570,8 @@ export default function Class10CareerExplorer({ setActivePage }) {
 
             <p className="ce-summary">
               This career matches the student’s current stream recommendation
-              and career profile. It connects well with business thinking,
-              financial understanding, problem-solving, and long-term career
-              growth.
+              and career profile. It connects with skills, interests, subject
+              direction, and long-term growth possibilities.
             </p>
 
             <div className="ce-hero-actions">
@@ -322,8 +619,20 @@ export default function Class10CareerExplorer({ setActivePage }) {
         </section>
 
         <section className="ce-stats-grid">
-          <StatCard icon="🎯" label="Recommended Stream" value={streamData.streamName} />
-          <StatCard icon="📈" label="Stream Match" value={`${streamData.matchScore}%`} />
+          <StatCard
+            icon="🎯"
+            label="Recommended Stream"
+            value={streamData.streamName}
+          />
+
+          <StatCard
+            icon="📈"
+            label="Stream Match"
+            value={
+              streamData.matchScore ? `${streamData.matchScore}%` : "Pending"
+            }
+          />
+
           <StatCard icon="💼" label="Career Matches" value={careers.length} />
           <StatCard icon="🚀" label="Top Demand" value={topCareer.demand} />
         </section>
@@ -424,19 +733,6 @@ const careerCss = `
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.ce-page::-webkit-scrollbar {
-  width: 10px;
-}
-
-.ce-page::-webkit-scrollbar-track {
-  background: #f3efff;
-}
-
-.ce-page::-webkit-scrollbar-thumb {
-  background: #60A5FA;
-  border-radius: 999px;
-}
-
 .ce-content {
   position: relative;
   z-index: 2;
@@ -453,15 +749,6 @@ const careerCss = `
   background: radial-gradient(circle, rgba(0, 91, 255, 0.18), transparent 65%);
   border-radius: 999px;
   pointer-events: none;
-}
-
-.ce-star {
-  position: fixed;
-  right: 80px;
-  top: 74px;
-  color: #0B63F6;
-  font-size: 34px;
-  opacity: 0.65;
 }
 
 .ce-header {
@@ -483,10 +770,6 @@ const careerCss = `
   cursor: pointer;
   box-shadow: 0 10px 22px rgba(0, 91, 255, 0.08);
   margin-bottom: 12px;
-}
-
-.ce-back-btn:hover {
-  background: #F6FAFF;
 }
 
 .ce-breadcrumb {
@@ -534,17 +817,26 @@ const careerCss = `
   box-shadow: 0 14px 26px rgba(0, 91, 255, 0.22);
 }
 
-.ce-hero-card {
-  border: 1px solid #e7e2f4;
-  background: linear-gradient(135deg, #ffffff 0%, #F6FAFF 100%);
-  border-radius: 24px;
+.ce-hero-card,
+.ce-search-card,
+.ce-main-section,
+.ce-career-card,
+.ce-stat-card,
+.ce-locked-card {
+  border: 1px solid #D6E6FF;
+  background: #ffffff;
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
+}
+
+.ce-hero-card {
+  border-radius: 24px;
   padding: 24px;
   display: grid;
-  grid-template-columns: 1fr 145px;
+  grid-template-columns: 1fr 170px;
   gap: 24px;
   align-items: center;
   margin-bottom: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #F6FAFF 100%);
 }
 
 .ce-eyebrow {
@@ -563,11 +855,15 @@ const careerCss = `
   font-weight: 950;
 }
 
+.ce-match-line,
+.ce-summary {
+  color: #475569;
+  font-weight: 650;
+}
+
 .ce-match-line {
   margin: 11px 0 0;
-  color: #475569;
   font-size: 15px;
-  font-weight: 750;
 }
 
 .ce-match-line span {
@@ -578,10 +874,8 @@ const careerCss = `
 .ce-summary {
   max-width: 880px;
   margin: 11px 0 0;
-  color: #475569;
   font-size: 14px;
   line-height: 1.5;
-  font-weight: 600;
 }
 
 .ce-hero-actions {
@@ -591,7 +885,9 @@ const careerCss = `
   flex-wrap: wrap;
 }
 
-.ce-hero-actions button {
+.ce-hero-actions button,
+.ce-card-btn,
+.ce-locked-actions button {
   border: none;
   background: linear-gradient(135deg, #005BFF, #00A3FF);
   color: white;
@@ -602,53 +898,57 @@ const careerCss = `
   cursor: pointer;
 }
 
-.ce-hero-actions button.secondary {
+.ce-hero-actions button.secondary,
+.ce-locked-actions button.secondary {
   background: #ffffff;
   color: #005BFF;
   border: 1px solid #60A5FA;
 }
 
 .ce-match-circle {
-  width: 132px;
-  height: 132px;
+  width: 152px;
+  height: 152px;
   border-radius: 999px;
   background:
-    radial-gradient(circle at center, #ffffff 0 52%, transparent 53%),
+    radial-gradient(circle at center, #ffffff 0 59%, transparent 60%),
     conic-gradient(#00A3FF 0 96%, #E6F0FF 96% 100%);
   display: flex;
   align-items: center;
   justify-content: center;
+  justify-self: center;
   box-shadow: 0 18px 35px rgba(0, 91, 255, 0.18);
 }
 
 .ce-match-circle div {
-  width: 92px;
-  height: 92px;
+  width: 110px;
+  height: 110px;
   border-radius: 999px;
   background: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 5px;
+  text-align: center;
 }
 
 .ce-match-circle strong {
   color: #005BFF;
-  font-size: 27px;
+  font-size: 28px;
+  line-height: 1;
   font-weight: 950;
 }
 
 .ce-match-circle span {
   color: #64748b;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 850;
+  white-space: nowrap;
 }
 
 .ce-search-card {
-  border: 1px solid #e7e2f4;
-  background: #ffffff;
   border-radius: 22px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.055);
   padding: 18px 20px;
   margin-bottom: 16px;
   display: grid;
@@ -657,14 +957,18 @@ const careerCss = `
   align-items: center;
 }
 
-.ce-search-card p {
+.ce-search-card p,
+.ce-section-head p,
+.ce-chip-section p,
+.ce-roadmap p {
   margin: 0 0 4px;
   color: #005BFF;
   font-size: 13px;
   font-weight: 950;
 }
 
-.ce-search-card h2 {
+.ce-search-card h2,
+.ce-section-head h2 {
   margin: 0;
   color: #111827;
   font-size: 20px;
@@ -674,7 +978,7 @@ const careerCss = `
 .ce-search-card input {
   width: 100%;
   height: 48px;
-  border: 1px solid #e5d8ff;
+  border: 1px solid #BFD7FF;
   background: #F6FAFF;
   border-radius: 15px;
   padding: 0 18px;
@@ -682,11 +986,6 @@ const careerCss = `
   font-size: 15px;
   font-weight: 650;
   outline: none;
-}
-
-.ce-search-card input:focus {
-  border-color: #0B63F6;
-  box-shadow: 0 0 0 4px rgba(0, 163, 255, 0.12);
 }
 
 .ce-stats-grid {
@@ -697,14 +996,11 @@ const careerCss = `
 }
 
 .ce-stat-card {
-  border: 1px solid #e7e2f4;
-  background: white;
   border-radius: 20px;
   padding: 18px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.045);
 }
 
 .ce-stat-card > div {
@@ -733,11 +1029,8 @@ const careerCss = `
 }
 
 .ce-main-section {
-  border: 1px solid #e7e2f4;
-  background: #ffffff;
   border-radius: 24px;
   padding: 22px;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.055);
 }
 
 .ce-section-head {
@@ -746,20 +1039,6 @@ const careerCss = `
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 18px;
-}
-
-.ce-section-head p {
-  margin: 0 0 5px;
-  color: #005BFF;
-  font-size: 14px;
-  font-weight: 950;
-}
-
-.ce-section-head h2 {
-  margin: 0;
-  color: #111827;
-  font-size: 24px;
-  font-weight: 950;
 }
 
 .ce-section-head button {
@@ -780,11 +1059,9 @@ const careerCss = `
 }
 
 .ce-career-card {
-  border: 1px solid #D6E6FF;
-  background: linear-gradient(135deg, #ffffff, #fdfbff);
   border-radius: 21px;
   padding: 20px;
-  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.04);
+  background: linear-gradient(135deg, #ffffff, #f6faff);
 }
 
 .ce-career-top {
@@ -840,16 +1117,15 @@ const careerCss = `
   margin-bottom: 16px;
 }
 
-.ce-career-info div {
+.ce-career-info div,
+.ce-roadmap {
   background: #F6FAFF;
   border: 1px solid #D6E6FF;
   border-radius: 15px;
   padding: 12px;
 }
 
-.ce-career-info span,
-.ce-chip-section p,
-.ce-roadmap p {
+.ce-career-info span {
   display: block;
   color: #005BFF;
   font-size: 12px;
@@ -857,7 +1133,8 @@ const careerCss = `
   margin-bottom: 6px;
 }
 
-.ce-career-info strong {
+.ce-career-info strong,
+.ce-roadmap h4 {
   color: #111827;
   font-size: 14px;
   line-height: 1.35;
@@ -885,31 +1162,17 @@ const careerCss = `
 }
 
 .ce-roadmap {
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 13px;
   margin-bottom: 16px;
 }
 
 .ce-roadmap h4 {
   margin: 0;
   color: #475569;
-  font-size: 13px;
-  line-height: 1.45;
-  font-weight: 650;
 }
 
 .ce-card-btn {
   width: 100%;
   height: 42px;
-  border: none;
-  background: linear-gradient(135deg, #005BFF, #00A3FF);
-  color: white;
-  border-radius: 13px;
-  font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
 }
 
 .ce-loading {
@@ -923,7 +1186,7 @@ const careerCss = `
 .ce-loader-card {
   width: 360px;
   background: white;
-  border: 1px solid #e7e2f4;
+  border: 1px solid #D6E6FF;
   border-radius: 24px;
   padding: 34px;
   text-align: center;
@@ -945,6 +1208,151 @@ const careerCss = `
   color: #64748b;
 }
 
+.ce-locked-wrap {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ce-locked-card {
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+  border-radius: 30px;
+  padding: 42px;
+  text-align: center;
+}
+
+.ce-lock-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  margin: 0 auto 22px;
+  background: linear-gradient(135deg, #005BFF, #00A3FF);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  box-shadow: 0 18px 36px rgba(0, 91, 255, 0.24);
+}
+
+.ce-locked-eyebrow {
+  margin: 0 0 10px;
+  color: #005BFF;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.ce-locked-card h1 {
+  margin: 0;
+  color: #071B5F;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  font-weight: 950;
+}
+
+.ce-locked-text {
+  max-width: 560px;
+  margin: 14px auto 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 650;
+}
+
+.ce-locked-progress {
+  margin-top: 26px;
+  padding: 18px;
+  border: 1px solid #d6e6ff;
+  border-radius: 18px;
+  background: #f6faff;
+}
+
+.ce-progress-top {
+  display: flex;
+  justify-content: space-between;
+  color: #071B5F;
+  font-size: 14px;
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+
+.ce-progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #e6f0ff;
+  overflow: hidden;
+}
+
+.ce-progress-track div {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #005BFF, #00A3FF);
+}
+
+.ce-required-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 9px;
+}
+
+.ce-required-item {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 26px 1fr 72px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e6f0ff;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.ce-required-item span {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 950;
+}
+
+.ce-required-item.done span {
+  background: #dcfce7;
+  color: #08a63f;
+}
+
+.ce-required-item p {
+  margin: 0;
+  color: #071B5F;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.ce-required-item strong {
+  color: #005BFF;
+  font-size: 13px;
+  font-weight: 950;
+  text-align: right;
+}
+
+.ce-locked-actions {
+  margin-top: 26px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 @media (max-width: 1180px) {
   .ce-hero-card,
   .ce-search-card {
@@ -962,69 +1370,38 @@ const careerCss = `
   }
 }
 
-@media (max-height: 760px) {
+@media (max-width: 720px) {
   .ce-content {
-    padding: 16px 22px 34px;
+    padding: 18px;
   }
 
-  .ce-back-btn {
-    padding: 9px 13px;
-    margin-bottom: 9px;
-  }
-
-  .ce-breadcrumb {
-    font-size: 12px;
+  .ce-header {
+    flex-direction: column;
   }
 
   .ce-header h1 {
-    font-size: 31px;
+    font-size: 30px;
   }
 
-  .ce-header h3 {
-    font-size: 12.5px;
+  .ce-stats-grid,
+  .ce-career-grid {
+    grid-template-columns: 1fr;
   }
 
-  .ce-report-btn {
-    margin-top: 28px;
-    padding: 10px 14px;
-    font-size: 12px;
+  .ce-career-info {
+    grid-template-columns: 1fr;
   }
 
-  .ce-hero-card {
-    padding: 18px 20px;
+  .ce-locked-wrap {
+    padding: 18px;
   }
 
-  .ce-hero-left h2 {
-    font-size: 31px;
+  .ce-locked-card {
+    padding: 28px 20px;
   }
 
-  .ce-summary {
-    font-size: 12.5px;
-  }
-
-  .ce-match-circle {
-    width: 108px;
-    height: 108px;
-  }
-
-  .ce-match-circle div {
-    width: 76px;
-    height: 76px;
-  }
-
-  .ce-match-circle strong {
-    font-size: 23px;
-  }
-
-  .ce-search-card {
-    padding: 15px;
-  }
-
-  .ce-stat-card {
-    padding: 14px;
+  .ce-locked-card h1 {
+    font-size: 28px;
   }
 }
 `;
-
-
-

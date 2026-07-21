@@ -6265,102 +6265,92 @@ router.get("/questions/:testType", (req, res) => {
     const { testType } = req.params;
     const round = Number(req.query.round) || 1;
 
-    if (testType === "riasec" && riasecQuestionsByRound[round]) {
-      return res.status(200).json({
-        success: true,
-        source: `MEMORY_RIASEC_ROUND_${round}_NO_MONGODB`,
-        testType,
-        round,
-        count: riasecQuestionsByRound[round].length,
-        data: riasecQuestionsByRound[round],
-        questions: riasecQuestionsByRound[round],
+    const questionBank = {
+      riasec: riasecQuestionsByRound,
+      aptitude: aptitudeQuestionsByRound,
+      personality: personalityQuestionsByRound,
+      "academic-style": academicStyleQuestionsByRound,
+      "situational-iq": situationalIQQuestionsByRound,
+      values: valuesQuestionsByRound,
+      confidence: confidenceQuestionsByRound,
+    };
+
+    if (!testType) {
+      return res.status(400).json({
+        success: false,
+        message: "testType is required",
+        count: 0,
+        data: [],
+        questions: [],
       });
     }
 
-    if (testType === "aptitude" && aptitudeQuestionsByRound[round]) {
-      return res.status(200).json({
-        success: true,
-        source: `MEMORY_APTITUDE_ROUND_${round}_NO_MONGODB`,
+    if (!Number.isInteger(round) || round < 1 || round > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "Round must be between 1 and 5",
         testType,
         round,
-        count: aptitudeQuestionsByRound[round].length,
-        data: aptitudeQuestionsByRound[round],
-        questions: aptitudeQuestionsByRound[round],
+        count: 0,
+        data: [],
+        questions: [],
       });
     }
-if (testType === "personality" && personalityQuestionsByRound[round]) {
-  return res.status(200).json({
-    success: true,
-    source: `MEMORY_PERSONALITY_ROUND_${round}_NO_MONGODB`,
-    testType,
-    round,
-    count: personalityQuestionsByRound[round].length,
-    data: personalityQuestionsByRound[round],
-    questions: personalityQuestionsByRound[round],
-  });
-}
-if (testType === "academic-style" && academicStyleQuestionsByRound[round]) {
-  return res.status(200).json({
-    success: true,
-    source: `MEMORY_ACADEMIC_STYLE_ROUND_${round}_NO_MONGODB`,
-    testType,
-    round,
-    count: academicStyleQuestionsByRound[round].length,
-    data: academicStyleQuestionsByRound[round],
-    questions: academicStyleQuestionsByRound[round],
-  });
-}
-if (testType === "situational-iq" && situationalIQQuestionsByRound[round]) {
-  return res.status(200).json({
-    success: true,
-    source: `MEMORY_SITUATIONAL_IQ_ROUND_${round}_NO_MONGODB`,
-    testType,
-    round,
-    count: situationalIQQuestionsByRound[round].length,
-    data: situationalIQQuestionsByRound[round],
-    questions: situationalIQQuestionsByRound[round],
-  });
-}
-if (testType === "values" && valuesQuestionsByRound[round]) {
-  return res.status(200).json({
-    success: true,
-    source: `MEMORY_VALUES_ROUND_${round}_NO_MONGODB`,
-    testType,
-    round,
-    count: valuesQuestionsByRound[round].length,
-    data: valuesQuestionsByRound[round],
-    questions: valuesQuestionsByRound[round],
-  });
-}
-if (testType === "confidence" && confidenceQuestionsByRound[round]) {
-  return res.status(200).json({
-    success: true,
-    source: `MEMORY_CONFIDENCE_ROUND_${round}_NO_MONGODB`,
-    testType,
-    round,
-    count: confidenceQuestionsByRound[round].length,
-    data: confidenceQuestionsByRound[round],
-    questions: confidenceQuestionsByRound[round],
-  });
-}
-    return res.status(404).json({
-      success: false,
-      message: `No questions added yet for ${testType}, round ${round}`,
+
+    const selectedTestBank = questionBank[testType];
+
+    if (!selectedTestBank) {
+      return res.status(404).json({
+        success: false,
+        message: `Invalid test type: ${testType}`,
+        allowedTests: Object.keys(questionBank),
+        testType,
+        round,
+        count: 0,
+        data: [],
+        questions: [],
+      });
+    }
+
+    const selectedRoundQuestions = selectedTestBank[round] || [];
+
+    if (!Array.isArray(selectedRoundQuestions) || selectedRoundQuestions.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No questions found for ${testType}, round ${round}`,
+        testType,
+        round,
+        count: 0,
+        data: [],
+        questions: [],
+      });
+    }
+
+    const limitedQuestions = selectedRoundQuestions.slice(0, 20);
+
+    return res.status(200).json({
+      success: true,
+      source: `MEMORY_${String(testType)
+        .toUpperCase()
+        .replaceAll("-", "_")}_ROUND_${round}_ONLY_20`,
       testType,
       round,
-      count: 0,
-      data: [],
-      questions: [],
+      count: limitedQuestions.length,
+      totalAvailableInRound: selectedRoundQuestions.length,
+      data: limitedQuestions,
+      questions: limitedQuestions,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch Class 10 questions",
       error: error.message,
+      count: 0,
+      data: [],
+      questions: [],
     });
   }
 });
-
 /* =========================================================
    SUBMIT ROUTE
 ========================================================= */
