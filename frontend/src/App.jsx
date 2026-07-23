@@ -226,19 +226,18 @@ export default function App() {
     setCurrentModule(defaultModule);
   }
 
-  function logout() {
-    localStorage.removeItem("groerx_user");
-    localStorage.removeItem("groerx_selected_profile");
+ function logout() {
+  localStorage.removeItem("groerx_user");
+  localStorage.removeItem("groerx_selected_profile");
+  localStorage.removeItem("selectedProfile");
+  localStorage.removeItem("currentModule");
+  localStorage.removeItem("studentName");
+  localStorage.removeItem("studentMobile");
 
-    localStorage.removeItem("selectedProfile");
-    localStorage.removeItem("currentModule");
-    localStorage.removeItem("studentName");
-    localStorage.removeItem("studentMobile");
-
-    setLoggedUser(null);
-    setSelectedProfile("");
-    setCurrentModule("dashboard");
-  }
+  setLoggedUser(null);
+  setSelectedProfile("");
+  setCurrentModule("dashboard");
+}
 
   function setActivePage(page) {
     localStorage.setItem("currentModule", page);

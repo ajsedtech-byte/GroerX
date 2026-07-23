@@ -165,7 +165,7 @@ export default function Class10Dashboard({ setActivePage }) {
 
   function getProgressPercent() {
     const totalAttempted = tests.reduce(
-(sum, test) => sum + Number(test.attempted || 0),
+      (sum, test) => sum + Number(test.attempted || 0),
       0
     );
 
@@ -321,35 +321,33 @@ export default function Class10Dashboard({ setActivePage }) {
           </div>
 
           <div className="cx-test-list">
-            {tests.map((test) => {
-              return (
-                <div key={test.key} className="cx-test-row">
-                  <div
-                    className="cx-test-icon"
-                    style={{ background: test.color }}
-                  >
-                    {test.icon}
-                  </div>
-
-                  <div className="cx-test-info">
-                    <h4>{test.name}</h4>
-                    <p>
-                      {test.status} · {test.attempted}/{test.total} questions
-                    </p>
-                  </div>
-
-                  <strong className="cx-score">{test.percentage}%</strong>
-
-                  <button
-                    type="button"
-                    onClick={() => setActivePage(`assessment:${test.key}`)}
-                    className="cx-retake-btn"
-                  >
-                    {test.attempted > 0 ? "Continue" : "Start"}
-                  </button>
+            {tests.map((test) => (
+              <div key={test.key} className="cx-test-row">
+                <div
+                  className="cx-test-icon"
+                  style={{ background: test.color }}
+                >
+                  {test.icon}
                 </div>
-              );
-            })}
+
+                <div className="cx-test-info">
+                  <h4>{test.name}</h4>
+                  <p>
+                    {test.status} · {test.attempted}/{test.total} questions
+                  </p>
+                </div>
+
+                <strong className="cx-score">{test.percentage}%</strong>
+
+                <button
+                  type="button"
+                  onClick={() => setActivePage(`assessment:${test.key}`)}
+                  className="cx-retake-btn"
+                >
+                  {test.attempted > 0 ? "Continue" : "Start"}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -428,7 +426,7 @@ export default function Class10Dashboard({ setActivePage }) {
             <div className="cx-locked-card">
               <div className="cx-trophy">🔒</div>
 
-              <div>
+              <div className="cx-locked-content">
                 <p>Result Modules Locked</p>
                 <h3>Complete Round 1 of all 7 tests</h3>
                 <h4>
@@ -441,7 +439,7 @@ export default function Class10Dashboard({ setActivePage }) {
             <div className="cx-recommend-card">
               <div className="cx-trophy">🏆</div>
 
-              <div>
+              <div className="cx-locked-content">
                 <p>Latest Recommendation</p>
                 <h3>{streamName}</h3>
                 <h4>
@@ -477,14 +475,16 @@ function SummaryCard({ icon, label, value, small, progress, locked }) {
 const dashboardCss = `
 .cx-page {
   position: relative;
-  height: 100vh;
-  overflow: hidden;
-  padding: 26px 34px 24px;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px 30px 26px;
   background: #fbfbff;
   color: #111827;
   display: grid;
-  grid-template-rows: auto 96px 1fr;
-  gap: 18px;
+  grid-template-rows: auto auto auto;
+  gap: 16px;
+  box-sizing: border-box;
 }
 
 .cx-bg-blob {
@@ -493,7 +493,7 @@ const dashboardCss = `
   top: -160px;
   width: 500px;
   height: 360px;
-  background: radial-gradient(circle, rgba(0, 91, 255, 0.18), transparent 66%);
+  background: radial-gradient(circle, rgba(0, 91, 255, 0.16), transparent 66%);
   border-radius: 999px;
   pointer-events: none;
 }
@@ -503,8 +503,8 @@ const dashboardCss = `
   right: 82px;
   top: 72px;
   color: #0B63F6;
-  font-size: 34px;
-  opacity: 0.65;
+  font-size: 30px;
+  opacity: 0.55;
 }
 
 .cx-header {
@@ -513,9 +513,9 @@ const dashboardCss = `
 }
 
 .cx-header p {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: #64748b;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 750;
 }
 
@@ -530,18 +530,20 @@ const dashboardCss = `
 
 .cx-header h1 {
   margin: 0;
-  font-size: 42px;
+  font-size: 36px;
   line-height: 1.02;
   color: #0f172a;
-  letter-spacing: -1.3px;
+  letter-spacing: -1px;
   font-weight: 950;
 }
 
 .cx-header h3 {
-  margin: 12px 0 0;
+  max-width: 880px;
+  margin: 9px 0 0;
   color: #64748b;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 650;
 }
 
 .cx-summary-grid {
@@ -549,18 +551,20 @@ const dashboardCss = `
   z-index: 2;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  gap: 14px;
 }
 
 .cx-summary-card {
-  border-radius: 19px;
+  min-height: 88px;
+  border-radius: 18px;
   border: 1px solid #d6e6ff;
   background: #ffffff;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.055);
-  padding: 16px 18px;
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .cx-summary-card.locked {
@@ -570,45 +574,45 @@ const dashboardCss = `
 .cx-summary-content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .cx-summary-icon {
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   background: #EFF6FF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 23px;
+  font-size: 21px;
   flex-shrink: 0;
 }
 
 .cx-summary-card p {
   margin: 0 0 4px;
   color: #64748b;
-  font-weight: 780;
-  font-size: 14px;
+  font-weight: 800;
+  font-size: 13px;
 }
 
 .cx-summary-card h2 {
   margin: 0;
   color: #005BFF;
-  font-size: 27px;
+  font-size: 24px;
   font-weight: 950;
   line-height: 1.08;
 }
 
 .cx-summary-card h2.small {
   color: #111827;
-  font-size: 17px;
-  line-height: 1.15;
-  max-width: 210px;
+  font-size: 16px;
+  line-height: 1.18;
+  max-width: 230px;
 }
 
 .cx-card-progress {
-  margin-top: 13px;
+  margin-top: 10px;
   width: 100%;
   height: 5px;
   border-radius: 999px;
@@ -620,21 +624,22 @@ const dashboardCss = `
   z-index: 2;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1.42fr 0.95fr;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(360px, 0.95fr);
+  gap: 18px;
+  align-items: start;
 }
 
 .cx-card {
   border-radius: 22px;
   border: 1px solid #d6e6ff;
   background: #ffffff;
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.065);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
 }
 
 .cx-assessment-card,
 .cx-action-card {
-  min-height: 0;
-  padding: 20px;
+  padding: 18px;
 }
 
 .cx-section-title {
@@ -645,13 +650,14 @@ const dashboardCss = `
 }
 
 .cx-title-icon {
-  width: 29px;
-  height: 29px;
-  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 17px;
+  flex-shrink: 0;
 }
 
 .cx-title-icon.green {
@@ -665,28 +671,28 @@ const dashboardCss = `
 .cx-section-title h2 {
   margin: 0;
   color: #111827;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 950;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
 }
 
 .cx-test-list {
-  height: calc(100% - 46px);
   border: 1px solid #d6e6ff;
   border-radius: 17px;
   overflow: hidden;
   display: grid;
-  grid-template-rows: repeat(7, 1fr);
 }
 
 .cx-test-row {
+  min-height: 58px;
   display: grid;
-  grid-template-columns: 42px 1fr 70px 96px;
+  grid-template-columns: 40px minmax(0, 1fr) 58px 90px;
   align-items: center;
-  gap: 12px;
-  padding: 0 17px;
+  gap: 11px;
+  padding: 9px 14px;
   border-bottom: 1px solid #edf2f7;
   background: #ffffff;
+  box-sizing: border-box;
 }
 
 .cx-test-row:last-child {
@@ -705,23 +711,32 @@ const dashboardCss = `
   flex-shrink: 0;
 }
 
+.cx-test-info {
+  min-width: 0;
+}
+
 .cx-test-info h4 {
   margin: 0;
   color: #111827;
   font-size: 14px;
+  line-height: 1.15;
   font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cx-test-info p {
-  margin: 2px 0 0;
+  margin: 3px 0 0;
   color: #64748b;
   font-size: 12px;
+  line-height: 1.2;
   font-weight: 650;
 }
 
 .cx-score {
   color: #08a63f;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 950;
   text-align: right;
 }
@@ -744,42 +759,53 @@ const dashboardCss = `
 .cx-action-card {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  overflow: visible;
+}
+
+.cx-action-card .cx-section-title {
+  margin-bottom: 0;
 }
 
 .cx-action-list {
   display: grid;
-  gap: 11px;
+  gap: 9px;
 }
 
 .cx-action-btn {
   width: 100%;
-  height: 47px;
+  min-height: 44px;
   border-radius: 14px;
   border: 1px solid #D6E6FF;
   background: linear-gradient(135deg, #ffffff, #F6FAFF);
   color: #111827;
-  padding: 0 16px;
+  padding: 9px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .cx-action-btn.locked {
-  opacity: 0.8;
+  opacity: 0.78;
   background: linear-gradient(135deg, #ffffff, #f8fafc);
   color: #64748b;
 }
 
 .cx-action-btn span {
-  font-size: 14px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.22;
   font-weight: 900;
+  white-space: normal;
 }
 
 .cx-action-btn b {
   color: #005BFF;
-  font-size: 25px;
+  font-size: 22px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .cx-action-btn:hover {
@@ -788,13 +814,17 @@ const dashboardCss = `
 
 .cx-recommend-card,
 .cx-locked-card {
-  margin-top: auto;
+  position: static;
+  width: 100%;
+  margin-top: 4px;
   border-radius: 18px;
-  padding: 20px;
-  display: flex;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
-  gap: 16px;
-  min-height: 106px;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .cx-recommend-card {
@@ -808,40 +838,47 @@ const dashboardCss = `
 }
 
 .cx-trophy {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
   background: linear-gradient(135deg, #E6F0FF, #dbeafe);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 27px;
+  font-size: 22px;
   flex-shrink: 0;
+}
+
+.cx-locked-content {
+  min-width: 0;
 }
 
 .cx-recommend-card p,
 .cx-locked-card p {
-  margin: 0 0 5px;
-  color: #005BFF;
-  font-size: 13px;
+  margin: 0 0 3px;
+  color: #8aa0bd;
+  font-size: 11px;
+  line-height: 1.15;
   font-weight: 900;
 }
 
 .cx-recommend-card h3,
 .cx-locked-card h3 {
   margin: 0;
-  color: #111827;
-  font-size: 22px;
+  color: #071b5f;
+  font-size: 17px;
+  line-height: 1.15;
   font-weight: 950;
+  letter-spacing: -0.2px;
 }
 
 .cx-recommend-card h4,
 .cx-locked-card h4 {
   margin: 5px 0 0;
-  color: #64748b;
-  font-size: 14px;
+  color: #4f6b93;
+  font-size: 11px;
+  line-height: 1.3;
   font-weight: 750;
-  line-height: 1.35;
 }
 
 .cx-recommend-card h4 span {
@@ -872,9 +909,7 @@ const dashboardCss = `
 
 @media (max-width: 1100px) {
   .cx-page {
-    height: auto;
-    min-height: 100vh;
-    overflow: auto;
+    padding: 18px;
   }
 
   .cx-summary-grid {
@@ -886,19 +921,17 @@ const dashboardCss = `
   }
 
   .cx-test-list {
-    height: auto;
     display: block;
   }
 
   .cx-test-row {
-    min-height: 72px;
+    min-height: 68px;
   }
 }
 
 @media (max-width: 700px) {
   .cx-page {
-    padding: 18px;
-    grid-template-rows: auto;
+    padding: 16px;
   }
 
   .cx-header h1 {
@@ -926,6 +959,16 @@ const dashboardCss = `
 
   .cx-retake-btn {
     width: 120px;
+  }
+
+  .cx-recommend-card,
+  .cx-locked-card {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .cx-trophy {
+    width: 40px;
+    height: 40px;
   }
 }
 `;

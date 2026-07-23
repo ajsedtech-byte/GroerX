@@ -9,21 +9,22 @@ export default function GroerXLayout({
   onSwitchProfile,
 }) {
   const menuItems = profile?.menu || [];
+function handleLogout() {
+  localStorage.removeItem("groerx_user");
+  localStorage.removeItem("groerx_selected_profile");
+  localStorage.removeItem("selectedProfile");
+  localStorage.removeItem("currentModule");
+  localStorage.removeItem("studentName");
+  localStorage.removeItem("studentMobile");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("student");
-    localStorage.removeItem("class10StudentId");
-    localStorage.removeItem("currentProfile");
-    localStorage.removeItem("selectedProfile");
+  if (typeof onSwitchProfile === "function") {
+    onSwitchProfile();
+    return;
+  }
 
-    sessionStorage.clear();
-
-    window.location.replace("/");
-  };
-
-  return (
+  window.location.href = "/";
+}
+return (
     <div className="gx-shell">
       <style>{layoutCss}</style>
 
